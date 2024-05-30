@@ -20,7 +20,8 @@ func InitRouter(e *echo.Echo, db *gorm.DB) {
 
 	e.POST("/login", userHandlerAPI.Login)
 
-	e.POST("/users", userHandlerAPI.Register)
+	e.POST("/usersCustomer", userHandlerAPI.RegisterCustomer)
+	e.POST("/usersMerchant", userHandlerAPI.RegisterMerchant)
 	e.GET("/users", userHandlerAPI.GetProfileUser, middlewares.JWTMiddleware())
 	e.DELETE("/users", userHandlerAPI.Delete, middlewares.JWTMiddleware())
 	e.PUT("/users", userHandlerAPI.Update, middlewares.JWTMiddleware())

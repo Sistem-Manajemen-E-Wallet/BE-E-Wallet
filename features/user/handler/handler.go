@@ -55,7 +55,7 @@ func (uh *UserHandler) UpdateProfilePicture(c echo.Context) error {
 	return c.JSON(http.StatusOK, responses.WebJSONResponse("success upload", uploadUrl))
 }
 
-func (uh *UserHandler) Register(c echo.Context) error {
+func (uh *UserHandler) RegisterCustomer(c echo.Context) error {
 	newUser := UserRequest{}
 	errBind := c.Bind(&newUser)
 	if errBind != nil {
@@ -63,10 +63,12 @@ func (uh *UserHandler) Register(c echo.Context) error {
 	}
 
 	inputCore := user.Core{
-		Name:     newUser.Name,
-		Email:    newUser.Email,
-		Password: newUser.Password,
-		Phone:    newUser.PhoneNumber,
+		Name:       newUser.Name,
+		Email:      newUser.Email,
+		Phone:      newUser.PhoneNumber,
+		Pin:        newUser.Pin,
+		PinConfirm: newUser.PinConfirm,
+		Role:       "Customer",
 	}
 	errInsert := uh.userService.Create(inputCore)
 	if errInsert != nil {
@@ -76,7 +78,34 @@ func (uh *UserHandler) Register(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, responses.WebJSONResponse("error insert data: "+errInsert.Error(), nil))
 	}
 
-	return c.JSON(http.StatusCreated, responses.WebJSONResponse("success add user", nil))
+	return c.JSON(http.StatusCreated, responses.WebJSONResponse("success add customer", nil))
+
+}
+
+func (uh *UserHandler) RegisterMerchant(c echo.Context) error {
+	newUser := UserRequest{}
+	errBind := c.Bind(&newUser)
+	if errBind != nil {
+		return c.JSON(http.StatusBadRequest, responses.WebJSONResponse("error bind data: "+errBind.Error(), nil))
+	}
+
+	inputCore := user.Core{
+		Name:       newUser.Name,
+		Email:      newUser.Email,
+		Phone:      newUser.PhoneNumber,
+		Pin:        newUser.Pin,
+		PinConfirm: newUser.PinConfirm,
+		Role:       "Merchant",
+	}
+	errInsert := uh.userService.Create(inputCore)
+	if errInsert != nil {
+		if strings.Contains(errInsert.Error(), "validation") {
+			return c.JSON(http.StatusBadRequest, responses.WebJSONResponse("error insert data: "+errInsert.Error(), nil))
+		}
+		return c.JSON(http.StatusInternalServerError, responses.WebJSONResponse("error insert data: "+errInsert.Error(), nil))
+	}
+
+	return c.JSON(http.StatusCreated, responses.WebJSONResponse("success add merchant", nil))
 
 }
 
@@ -108,17 +137,17 @@ func (uh *UserHandler) Delete(c echo.Context) error {
 
 func (uh *UserHandler) Update(c echo.Context) error {
 	idToken := middlewares.ExtractTokenUserId(c)
-	updateUser := UserRequest{}
+	updateUser := UserUpdateRequest{}
 	errBind := c.Bind(&updateUser)
 	if errBind != nil {
 		return c.JSON(http.StatusBadRequest, responses.WebJSONResponse("error bind data: "+errBind.Error(), nil))
 	}
 
 	updateCore := user.Core{
-		Name:     updateUser.Name,
-		Email:    updateUser.Email,
-		Password: updateUser.Password,
-		Phone:    updateUser.PhoneNumber,
+		Name:    updateUser.Name,
+		Email:   updateUser.Email,
+		Phone:   updateUser.PhoneNumber,
+		Address: updateUser.Address,
 	}
 
 	errUpdate := uh.userService.Update(uint(idToken), updateCore)
@@ -135,7 +164,7 @@ func (uh *UserHandler) Login(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, responses.WebJSONResponse("error bind data: "+errBind.Error(), nil))
 	}
 
-	login, token, errLogin := uh.userService.Login(loginUser.Email, loginUser.Password)
+	login, token, errLogin := uh.userService.Login(loginUser.PhoneNumber, loginUser.Pin)
 	if errLogin != nil {
 		return c.JSON(http.StatusInternalServerError, responses.WebJSONResponse("error login: "+errLogin.Error(), nil))
 	}
