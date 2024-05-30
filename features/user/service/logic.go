@@ -113,3 +113,7 @@ func (u *userService) Login(phone string, Pin string) (data *user.Core, token st
 	}
 	return data, token, nil
 }
+
+func (u *userService) LoginMerchant(email, password string) error {
+	return nil
+}

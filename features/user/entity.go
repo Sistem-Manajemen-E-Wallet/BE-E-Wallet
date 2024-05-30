@@ -33,4 +33,5 @@ type ServiceInterface interface {
 	Update(id uint, input Core) error
 	Login(email, password string) (data *Core, token string, err error)
 	UpdateProfilePicture(id uint, input Core) error
+	LoginMerchant(email, password string) error
 }
