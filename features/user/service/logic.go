@@ -34,14 +34,17 @@ func (u *userService) UpdateProfilePicture(id uint, input user.Core) error {
 
 // Create implements user.ServiceInterface.
 func (u *userService) Create(input user.Core) error {
-	if input.Name == "" || input.Email == "" || input.Password == "" || input.Phone == "" {
-		return errors.New("[validation] nama/email/password/phone tidak boleh kosong")
+	if input.Name == "" || input.Email == "" || input.Pin == "" || input.Phone == "" {
+		return errors.New("[validation] nama/email/Pin/phone tidak boleh kosong")
 	}
-	result, errHash := u.hashService.HashPassword(input.Password)
+	if input.Pin != input.PinConfirm {
+		return errors.New("[validation] pin tidak sesuai")
+	}
+	result, errHash := u.hashService.HashPassword(input.Pin)
 	if errHash != nil {
 		return errHash
 	}
-	input.Password = result
+	input.Pin = result
 
 	err := u.userData.Insert(input)
 	if err != nil {
@@ -78,12 +81,12 @@ func (u *userService) Update(id uint, input user.Core) error {
 		return errors.New("user not found. you must login first")
 	}
 
-	result2, errHash := u.hashService.HashPassword(input.Password)
+	result2, errHash := u.hashService.HashPassword(input.Pin)
 	if errHash != nil {
 		return errHash
 	}
-	if input.Password != "" {
-		input.Password = result2
+	if input.Pin != "" {
+		input.Pin = result2
 	}
 
 	if result.DeleteAt.IsZero() {
@@ -94,15 +97,15 @@ func (u *userService) Update(id uint, input user.Core) error {
 }
 
 // Login implements user.ServiceInterface.
-func (u *userService) Login(email string, password string) (data *user.Core, token string, err error) {
-	data, err = u.userData.Login(email)
+func (u *userService) Login(phone string, Pin string) (data *user.Core, token string, err error) {
+	data, err = u.userData.Login(phone)
 	if err != nil {
 		return nil, "", err
 	}
 
-	isLoginValid := u.hashService.CheckPasswordHash(data.Password, password)
+	isLoginValid := u.hashService.CheckPasswordHash(data.Pin, Pin)
 	if !isLoginValid {
-		return nil, "", errors.New("[validation] password tidak sesuai")
+		return nil, "", errors.New("[validation] Pin tidak sesuai")
 	}
 	token, errJWT := middlewares.CreateToken(int(data.ID))
 	if errJWT != nil {

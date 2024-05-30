@@ -18,16 +18,14 @@ func New(db *gorm.DB) user.DataInterface {
 
 // Insert implements user.DataInterface.
 func (u *userQuery) Insert(input user.Core) error {
-	var userGorm User
-
-	userGorm = User{
+	userGorm := User{
 		Model:          gorm.Model{},
 		Name:           input.Name,
 		Email:          input.Email,
-		Password:       input.Password,
+		Pin:            input.Pin,
 		PhoneNumber:    input.Phone,
 		ProfilePicture: "https://cdn-icons-png.flaticon.com/512/149/149071.png",
-		Role:           "user",
+		Role:           input.Role,
 	}
 	tx := u.db.Create(&userGorm)
 	if tx.Error != nil {
@@ -49,7 +47,7 @@ func (u *userQuery) SelectProfileById(id uint) (*user.Core, error) {
 		ID:             id,
 		Name:           userProfile.Name,
 		Email:          userProfile.Email,
-		Password:       userProfile.Password,
+		Pin:            userProfile.Pin,
 		Phone:          userProfile.PhoneNumber,
 		Role:           userProfile.Role,
 		CreatedAt:      userProfile.CreatedAt,
@@ -89,20 +87,10 @@ func (u *userQuery) Update(id uint, input user.Core) error {
 	return nil
 }
 
-// UpdateRole implements user.DataInterface.
-func (u *userQuery) UpdateRole(id uint, input user.Core) error {
-	tx := u.db.Model(&User{}).Where("id=?", id).Updates(input)
-	if tx.Error != nil {
-		return tx.Error
-	}
-
-	return nil
-}
-
 // Login implements user.DataInterface.
-func (u *userQuery) Login(email string) (*user.Core, error) {
+func (u *userQuery) Login(phone string) (*user.Core, error) {
 	var userData User
-	tx := u.db.Where("email = ?", email).First(&userData)
+	tx := u.db.Where("phone_number = ?", phone).First(&userData)
 	if tx.Error != nil {
 		return nil, tx.Error
 	}
@@ -111,7 +99,7 @@ func (u *userQuery) Login(email string) (*user.Core, error) {
 		ID:        userData.ID,
 		Name:      userData.Name,
 		Email:     userData.Email,
-		Password:  userData.Password,
+		Pin:       userData.Pin,
 		Phone:     userData.PhoneNumber,
 		Role:      userData.Role,
 		CreatedAt: userData.CreatedAt,
