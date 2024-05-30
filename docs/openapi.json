@@ -1,0 +1,620 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "E-WALLET API",
+        "version": "1.0.0",
+        "description": "documentation for e-wallet API",
+        "contact": {
+            "name": "Team 1 Alterra",
+            "email": "ezabintangramadhan@gmail.com"
+        },
+        "license": {
+            "name": "APACHE 2.0"
+        }
+    },
+    "servers": [        
+        {
+            "description": "server for e-wallet project",
+            "url": "https://auf.my.id"
+        }
+    ],
+    "paths": {
+        "/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "login user",
+                "description": "",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "phone_number": {
+                                        "type": "string",
+                                        "description": "phone number user",
+                                        "example": "08220321"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "description": "pin user",
+                                        "example": "123456"
+                                    }
+                                },
+                                "required": [
+                                    "phone_number",
+                                    "pin"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/login"
+                                },
+                                "examples": {
+                                    "success": {
+                                        "description": "Login successful",
+                                        "value":{
+                                            "id": 1,
+                                            "name":"user123",
+                                            "token":"agaTwefhwoefh12314"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400":{
+                        "description": "Login failed",
+                        "content": {
+                            "application/json":{
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string"
+                                        },
+                                        "description":{
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "failed": {
+                                        "description": "Login failed",
+                                        "value":{
+                                            "status":"login failed",
+                                            "description":"wrong username/password"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404":{
+                        "description": "user not found. please input correctly.",
+                    "content": {
+                    "application/json":{
+                        "schema":{
+                            "type": "object",
+                            "properties": {
+                                "message":{
+                                    "type": "string"
+                                }
+                            },
+                            "example":{
+                                "message":"user not found. please input correctly."
+                            }
+                        }
+                    }
+                }
+                    },
+                    "500":{
+                        "$ref": "#/components/responses/500"
+                    }
+                }
+            }
+        },
+        "/users/customer":{
+            "post":{
+                "tags": ["users"],
+                "summary": "create new costumer",
+                "description": "",
+                "requestBody":{
+                    "required": true,
+                    "content": {
+                        "application/json":{
+                            "schema":{
+                                "$ref": "#/components/schemas/insert_user"
+                            },
+                            "example": {
+                                "name":"tukimin",
+                                "email":"tukimin@mail.com",
+                                "phone_number":"08220321",                                
+                                "pin":"123456",
+                                "confirm_pin":"123456"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201":{
+                        "description": "successful register",
+                        "content":{
+                            "application/json":{
+                                "schema":{
+                                    "$ref": "#/components/responses/201"
+                                },
+                                "examples":{
+                                    "successful_register":{
+                                        "value":{
+                                            "message":"register successful"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400":{
+                        "$ref": "#/components/responses/400"
+                    },
+                    "404":{
+                        "$ref": "#/components/responses/404"
+                    },
+                    "500":{
+                        "$ref": "#/components/responses/500"
+                    }
+                }
+            }
+        },
+        "/users/merchant":{
+            "post":{
+                "tags": ["users"],
+                "summary": "create new merchant",
+                "description": "",
+                "requestBody":{
+                    "required": true,
+                    "content": {
+                        "application/json":{
+                            "schema":{
+                                "$ref": "#/components/schemas/insert_user"
+                            },
+                            "example": {
+                                "name":"tukimin",
+                                "email":"tukimin@mail.com",
+                                "phone_number":"08220321",                                
+                                "pin":"123456",
+                                "confirm_pin":"123456"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201":{
+                        "description": "successful register",
+                        "content":{
+                            "application/json":{
+                                "schema":{
+                                    "$ref": "#/components/responses/201"
+                                },
+                                "examples":{
+                                    "successful_register":{
+                                        "value":{
+                                            "message":"register successful"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400":{
+                        "$ref": "#/components/responses/400"
+                    },
+                    "404":{
+                        "$ref": "#/components/responses/404"
+                    },
+                    "500":{
+                        "$ref": "#/components/responses/500"
+                    }
+                }
+            }
+        },
+        "/users": {
+            "get": {
+                "security": [
+                {
+                    "JWTAuth":[]
+                }
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "see profile user",
+                "description": "see profile user by token id",
+                "responses": {
+                    "200": {
+                        "description": "Success get profile user",
+                        "content": {
+                            "application/json":{
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "name":{
+                                            "type": "string",
+                                            "example": "tukimin"
+                                        },
+                                        "email":{
+                                            "type": "string",
+                                            "example":"tukimin@mail.com"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/404"
+                    },
+                    "500":{
+                        "$ref": "#/components/responses/500"
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "JWTAuth":[]
+                    }
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Update existing user",
+                "description": "update existing user by id",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/update_profile"
+                            },
+                            "examples": {
+                                "update_user":{
+                                    "value":{
+                                        "name":"Eza",
+                                        "email":"eza@mail.com",
+                                        "phone_number":"0822232",
+                                        "address":"jl.jalanin aja dulu"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful update",
+                        "content":{
+                            "application/json":{
+                                "schema":{
+                                    "$ref": "#/components/responses/200"
+                                },
+                                "examples":{
+                                    "successful_update":{
+                                        "value":{
+                                            "message":"success update profile"
+                                        }
+                                    }
+                               }
+                           }
+                        }
+                    },
+                    "400":{
+                        "description": "wrong input",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "$ref": "#/components/responses/400"
+                                },
+                                "examples":{
+                                    "failed_update":{
+                                        "value":{
+                                            "message":"failed update. input your changes correctly"
+                                        }
+                                    }
+                               }
+                            }
+                        }
+                    },
+                    "500":{
+                        "$ref": "#/components/responses/500"
+                    }
+                }
+            },
+            "delete":{
+                "security": [
+                    {
+                        "JWTAuth":[]
+                    }
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "delete existing user",
+                "description": "delete existing user by id",
+                "responses": {
+                    "200":{
+                        "description": "successful delete user",
+                        "content":{
+                            "application/json":{
+                                "schema":{
+                                    "$ref": "#/components/responses/200"
+                                },
+                                "examples":{
+                                    "successful_delete":{
+                                        "value":{
+                                            "message":"success delete user"
+                                        }
+                                    }
+                               }
+                           }
+                        }
+                    },
+                    "404":{
+                        "description": "user not found",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "$ref": "#/components/responses/404"
+                                },
+                                "examples":{
+                                    "failed_delete":{
+                                        "value":{
+                                            "message":"failed delete. user not found"
+                                        }
+                                    }
+                               }
+                            }
+                        }
+                    },
+                    "500":{
+                        "$ref": "#/components/responses/500"
+                    }
+                }
+            }
+        },
+        "/users/changeprofilepicture":{
+            "post":{
+                "security": [
+                    {
+                        "JWTAuth":[]
+                    }
+                ],
+                "tags": ["users"],
+                "summary": "Upload profile picture",
+                "description": "Endpoint for upload user's profile picture",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "profile_picture": {
+                                    "type": "string",
+                                    "format": "binary",
+                                    "description": "The profile picture file to be uploaded"
+                                }
+                            },
+                            "required": ["profile_picture"]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "success upload profile picture",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Profile picture uploaded successfully"
+                                        },
+                                        "photoURL": {
+                                            "type": "string",
+                                            "example": "https://res.cloudinary.com/dikdesfng/image/upload/v1245564784/go-cloudinary/alfdbsaufpad.png"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/400"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/500"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "JWTAuth": {
+                "description": "token for admin",
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+
+        },
+        "parameters": {
+            "id_homestay": {              
+                "name": "id",
+                "in": "path",
+                "required": true,
+                "description": "id homestay to get data",
+                    "schema": {
+                        "type": "integer",
+                        "example":1
+                        }
+            }
+        },
+        "schemas": {
+            "login": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "token": {
+                        "type": "string"
+                    }
+                }
+            },
+            "insert_user":{
+                "type": "object",
+                "properties": {
+                    "name":{
+                        "type": "string"
+                    },
+                    "email":{
+                        "type": "string"
+                    },
+                    "phone_number":{
+                        "type": "string"
+                    },
+                    "pin":{
+                        "type": "string"
+                    },
+                    "confirm_pin":{
+                        "type": "string"
+                    }
+                }
+            },
+            "update_profile": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "phone_number":{
+                        "type": "string"
+                    },
+                    "address": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "responses": {
+            "200":{
+                "description": "success Process data",
+                "content": {
+                    "application/json":{
+                        "schema":{
+                            "type": "object",
+                            "properties": {
+                                "message":{
+                                    "type": "string"
+                                }                                
+                            }
+                        }
+                    }
+                }
+            },
+            "201":{
+                "description": "success create data",
+                "content": {
+                    "application/json":{
+                        "schema":{
+                            "type": "object",
+                            "properties": {
+                                "message":{
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "400":{
+                "description": "bad request from user",
+                "content": {
+                    "application/json":{
+                        "schema":{
+                            "type": "object",
+                            "properties": {
+                                "message":{
+                                    "type": "string"
+                                }
+                            },
+                            "example":{
+                                "message":"Process failed. Please check your input"
+                            }
+                        }
+                    }
+                }
+            },
+            "404":{
+                "description": "page not found or wrong url",
+                "content": {
+                    "application/json":{
+                        "schema":{
+                            "type": "object",
+                            "properties": {
+                                "message":{
+                                    "type": "string"
+                                }
+                            },
+                            "example":{
+                                "message":"procces failed. page not found or wrong url"
+                            }
+                        }
+                    }
+                }
+            },
+            "500":{
+                "description": "error procces on server",
+                "content": {
+                    "application/json":{
+                        "schema":{
+                            "type": "object",
+                            "properties": {
+                                "message":{
+                                    "type": "string"
+                                }
+                            },
+                            "example":{
+                                "message": "procces failed. error internal server"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
