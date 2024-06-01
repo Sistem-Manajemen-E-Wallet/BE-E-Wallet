@@ -679,6 +679,324 @@
                 }                
             }
         },
+        "/products": {
+            "get": {
+                "security": [
+                    {
+                        "JWTAuth": []
+                    }
+                ],
+                "tags": ["products"],
+                "summary": "Get all products",
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "messages": {
+                                            "type": "string",
+                                            "example": "success get all products"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Product"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "JWTAuth": []
+                    }
+                ],
+                "tags": ["products"],
+                "summary": "Create a new product",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PostProductRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Product created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "messages": {
+                                            "type": "string",
+                                            "example": "Product created successfully"
+                                        }
+                                    },
+                                    "example": {
+                                        "messages": "product created sucessfully"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/products/{id}/images": {
+            "post": {
+                "summary": "Upload a product image by product id",
+                "security": [
+                    {
+                        "JWTAuth": []
+                    }
+                ],
+                "tags": ["products"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "product_image": {
+                                        "type": "string",
+                                        "format": "binary",
+                                        "description": "The image file to be uploaded"
+                                    }
+                                },
+                                "required": ["product_image"]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Product image uploaded",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "messages": {
+                                            "type": "string",
+                                            "example": "Product image uploaded successfully"
+                                        }
+                                    },
+                                    "example": {
+                                        "messages": "Product image uploaded successfully"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "tags": ["products"],
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "schema": {
+                        "type": "integer"
+                    }
+                }
+            ]
+        },
+        "/products/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "JWTAuth": []
+                    }
+                ],
+                "tags": ["products"],
+                "summary": "Get a product by ID",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "messages": {
+                                            "type": "string",
+                                            "example": "success get product"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/Product"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "summary": "Update a product by ID",
+                "security": [
+                    {
+                        "JWTAuth": []
+                    }
+                ],
+                "tags": ["products"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PutProductRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Product updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "messages": {
+                                            "type": "string",
+                                            "example": "Product updated successfully"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "JWTAuth": []
+                    }
+                ],
+                "tags": ["products"],
+                "summary": "Delete a product by ID",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Product deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "messages": {
+                                            "type": "string",
+                                            "example": "Product deleted successfully"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+
+        "/users/{id}/products": {
+            "get": {
+                "security": [
+                    {
+                        "JWTAuth": []
+                    }
+                ],
+                "tags": ["products"],
+                "summary": "Get all products owned by a user",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "messages": {
+                                            "type": "string",
+                                            "example": "blabla"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Product"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/histories":{
             "get":{
                 "security": [
@@ -730,6 +1048,9 @@
             }
         }
     },
+
+
+
     "components": {
         "securitySchemes": {
             "JWTAuth": {
@@ -876,6 +1197,83 @@
                 "items":{
                     "$ref": "#/components/schemas/history"
                 }
+            },
+            "Product": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "user_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "product_name": {
+                        "type": "string",
+                        "example": "Sample Product"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Product Description"
+                    },
+                    "price": {
+                        "type": "number",
+                        "format": "integer",
+                        "example": 25000
+                    },
+                    "product_images": {
+                        "type": "string",
+                        "example": "https://cloud.image.com/www"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "example": "2020-05-05"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "example": "2020-05-05"
+                    }
+                },
+                "required": ["id", "name", "price", "description", "userId"]
+            },
+            "PostProductRequest": {
+                "type": "object",
+                "properties": {
+                    "product_name": {
+                        "type": "string",
+                        "example": "Sample Product"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Product Description"
+                    },
+                    "price": {
+                        "type": "number",
+                        "format": "integer",
+                        "example": 25000
+                    }
+                },
+                "required": ["product_name", "price", "description", "userId"]
+            },
+            "PutProductRequest": {
+                "type": "object",
+                "properties": {
+                    "product_name": {
+                        "type": "string",
+                        "example": "Sample Product"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Product Description"
+                    },
+                    "price": {
+                        "type": "number",
+                        "format": "integer",
+                        "example": 25000
+                    }
+                },
+                "required": ["product_name", "price", "description"]
             }
         },
         "responses": {
