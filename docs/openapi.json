@@ -124,9 +124,9 @@
                 }
             }
         },
-        "/users/customer":{
+        "/register/customer":{
             "post":{
-                "tags": ["users"],
+                "tags": ["Auth"],
                 "summary": "create new costumer",
                 "description": "",
                 "requestBody":{
@@ -176,9 +176,9 @@
                 }
             }
         },
-        "/users/merchant":{
+        "/register/merchant":{
             "post":{
-                "tags": ["users"],
+                "tags": ["Auth"],
                 "summary": "create new merchant",
                 "description": "",
                 "requestBody":{
@@ -453,6 +453,281 @@
                     }
                 }
             }
+        },
+        "/wallets":{
+            "get":{
+                "security": [
+                    {
+                        "JWTAuth":[]
+                    }
+                    ],
+                    "tags": ["wallets"],
+                "summary": "see balance user",
+                "description": "see balance user by token id",
+                "responses": {
+                    "200": {
+                        "description": "Success get balance user",
+                        "content": {
+                            "application/json":{
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "name":{
+                                            "type": "string",
+                                            "example": "tukimin"
+                                        },
+                                        "balance":{
+                                                "type": "integer",
+                                                "example":50000
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                    "404": {
+                        "$ref": "#/components/responses/404"
+                    },
+                    "500":{
+                        "$ref": "#/components/responses/500"
+                    }
+                }                
+            }
+        },
+        "/transactions":{
+            "post":{
+                "security": [
+                    {
+                        "JWTAuth":[]
+                    }
+                ],
+                "tags": ["transactions"],
+                "summary": "create transaction by customer",
+                "description": "create transaction between customer and merchant",
+                "requestBody":{
+                    "required": true,
+                    "content": {
+                        "application/json":{
+                            "schema":{
+                                "$ref": "#/components/schemas/transaction"
+                            }
+                        }
+                    }
+                },                
+                "responses": {
+                    "200": {
+                        "description": "success create transaction",
+                        "content":{
+                            "application/json":{
+                                "schema":{
+                                    "$ref": "#/components/responses/200"
+                                },
+                                "examples":{
+                                    "successful_create":{
+                                        "value":{
+                                            "message":"success create transaction"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400":{
+                        "description": "wrong input",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "$ref": "#/components/responses/400"
+                                },
+                                "examples":{
+                                    "failed_update":{
+                                        "value":{
+                                            "message":"failed create transaction. input your transaction correctly"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500":{
+                        "$ref": "#/components/responses/500"
+                    }
+                }                
+            },
+            "get":{
+                "security": [
+                    {
+                        "JWTAuth":[]
+                    }
+                ],
+                "tags": ["transactions"],
+                "summary": "get all transaction by merchant",
+                "description": "get all transaction from customer to see by merchant",
+                "responses": {
+                    "200":{
+                        "description": "success get all transaction",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "$ref": "#/components/schemas/all_transaction"
+                                },
+                                "examples": {
+                                    "example":{
+                                        "value":[
+                                            {
+                                                "user_id": 5,
+                                                "product_id": 12,
+                                                "quantity": 1,
+                                                "total_cost": 10000,
+                                                "status_progress": "sudah diantar",
+                                                "additional": "gapake acar",
+                                                "status_payment": "success"    
+                                            },
+                                            {
+                                                "user_id": 4,
+                                                "product_id": 11,
+                                                "quantity": 2,
+                                                "total_cost": 30000,
+                                                "status_progress": "sedang dimasak",
+                                                "additional": "tambah cabe",
+                                                "status_payment": "success"
+                                            }   
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404":{
+                        "$ref": "#/components/responses/404"
+                    },
+                    "500":{
+                        "$ref": "#/components/responses/500"
+                    }
+                }
+            },
+            "put":{
+                "security": [
+                    {
+                        "JWTAuth":[]
+                    }
+                ],
+                "tags": ["transactions"],
+                "summary": "update status progress",
+                "description": "update transaction status progress by id",
+                "requestBody":{
+                    "required": true,
+                    "content": {
+                        "application/json":{
+                            "schema":{
+                                "type": "object",
+                                "properties": {
+                                    "status_progress":{
+                                        "type": "string",
+                                        "example": "sedang diantar"
+                                    }
+                                },
+                                "required": [
+                                    "status_progress"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "success update status_progress",
+                        "content":{
+                            "application/json":{
+                                "schema":{
+                                    "$ref": "#/components/responses/200"
+                                },
+                                "examples":{
+                                    "successful_create":{
+                                        "value":{
+                                            "message":"success update status_progress"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400":{
+                        "description": "wrong input",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "$ref": "#/components/responses/400"
+                                },
+                                "examples":{
+                                    "failed_update":{
+                                        "value":{
+                                            "message":"failed update status_progress. input your status correctly"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500":{
+                        "$ref": "#/components/responses/500"
+                    }
+                }                
+            }
+        },
+        "/histories":{
+            "get":{
+                "security": [
+                    {
+                        "JWTAuth":[]
+                    }
+                ],
+                "tags": ["histories"],
+                "summary": "get histories by token id",
+                "description": "get histories by user_id from token id",
+                "responses": {
+                    "200":{
+                        "description": "success get history",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "$ref": "#/components/schemas/histories"
+                                },
+                                "examples": {
+                                    "example":{
+                                        "value":[
+                                            {
+                                                "created_at": "26 Mei 2024",
+                                                "trx_name": "pecel lele",
+                                                "type": "payment",
+                                                "amount": 50000,
+                                                "status": "waiting for payment"
+                                            },
+                                            {
+                                                "created_at": "27 Mei 2024",
+                                                "trx_name": "Bank BCA",
+                                                "type": "Top-Up",
+                                                "amount": 100000,
+                                                "status": "success"
+                                            }
+                                        ]                                                                                
+                                    }                                                           
+                                }
+                            }
+                        }
+                    },
+                    "404":{
+                        "$ref": "#/components/responses/404"
+                    },
+                    "500":{
+                        "$ref": "#/components/responses/500"
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -527,6 +802,79 @@
                     "address": {
                         "type": "string"
                     }
+                }
+            },
+            "transaction":{
+                "type": "object",
+                "properties": {
+                    "user_id": {
+                        "type": "integer",
+                        "example": 5
+                    },
+                    "product_id": {
+                        "type": "integer",
+                        "example": 12
+                    },                   
+                    "quantity": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "total_cost": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 1000.0
+                    },
+                    "status_progress": {
+                        "type": "string",
+                        "example": "sudah diantar"
+                    },
+                    "additional":{
+                        "type": "string",
+                        "example": "gapake acar"
+                    },
+                    "status_payment": {
+                        "type": "string",
+                        "example": "success"
+                    }
+                },
+                "required": ["user_id", "product_id", "quantity", "total_cost", "status_progress", "additional", "status_payment"]
+            },
+            "all_transaction":{
+                "type": "array",
+                "items":{
+                    "$ref": "#/components/schemas/transaction"
+                }
+            },
+            "history":{
+                "type": "object",
+                "properties": {
+                    "created_at":{
+                        "type": "string",
+                        "example":"26 Mei 2024"
+                    },
+                    "trx_name":{
+                        "type": "string",
+                        "example":"pecel lele"
+                    },
+                    "type":{
+                        "type": "string",
+                        "example":"payment"
+                    },
+                    "amount":{
+                        "type": "number",
+                        "format": "float",
+                        "example":50000.0
+                    },
+                    "status":{
+                        "type": "string",
+                        "example":"success"
+                    }
+                }
+            },
+            "histories":{
+                "type": "array",
+                "items":{
+                    "$ref": "#/components/schemas/history"
                 }
             }
         },
