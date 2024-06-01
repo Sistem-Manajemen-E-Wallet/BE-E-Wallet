@@ -4,21 +4,24 @@ import (
 	"e-wallet/features/product"
 	"e-wallet/features/user"
 	"errors"
+	"github.com/go-playground/validator/v10"
 )
 
 type productService struct {
 	productData product.DataInterface
 	userData    user.DataInterface
+	validate    *validator.Validate
 }
 
 func New(data product.DataInterface, userData user.DataInterface) product.ServiceInterface {
 	return &productService{
 		productData: data,
 		userData:    userData,
+		validate:    validator.New(),
 	}
 }
 
-func (p productService) GetAllProduct() ([]product.Core, error) {
+func (p *productService) GetAllProduct() ([]product.Core, error) {
 
 	result, err := p.productData.SelectAllProduct()
 	if err != nil {
@@ -28,7 +31,13 @@ func (p productService) GetAllProduct() ([]product.Core, error) {
 	return result, nil
 }
 
-func (p productService) Create(input product.Core) error {
+func (p *productService) Create(input product.Core) error {
+	errValidate := p.validate.Struct(input)
+
+	if errValidate != nil {
+		return errors.New("[validation error] " + errValidate.Error())
+	}
+
 	product := product.Core{
 		UserID:        input.UserID,
 		ProductName:   input.ProductName,
@@ -49,7 +58,7 @@ func (p productService) Create(input product.Core) error {
 	return p.productData.Insert(product)
 }
 
-func (p productService) GetProductById(id int) (*product.Core, error) {
+func (p *productService) GetProductById(id int) (*product.Core, error) {
 	if id < 0 {
 		return nil, errors.New("id not valid")
 	}
@@ -61,7 +70,7 @@ func (p productService) GetProductById(id int) (*product.Core, error) {
 	return result, nil
 }
 
-func (p productService) GetProductByUserId(id int) ([]product.Core, error) {
+func (p *productService) GetProductByUserId(id int) ([]product.Core, error) {
 	if id < 0 {
 		return nil, errors.New("id not valid")
 	}
@@ -81,7 +90,7 @@ func (p productService) GetProductByUserId(id int) ([]product.Core, error) {
 	return result, nil
 }
 
-func (p productService) Update(id int, input product.Core) error {
+func (p *productService) Update(id int, input product.Core) error {
 
 	product, err := p.productData.SelectProductById(id)
 	if err != nil {
@@ -99,7 +108,7 @@ func (p productService) Update(id int, input product.Core) error {
 	return nil
 }
 
-func (p productService) Delete(id int, userID int) error {
+func (p *productService) Delete(id int, userID int) error {
 
 	product, err := p.productData.SelectProductById(id)
 	if err != nil {

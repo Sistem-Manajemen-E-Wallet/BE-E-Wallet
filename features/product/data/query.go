@@ -15,7 +15,7 @@ func New(db *gorm.DB) product.DataInterface {
 	}
 }
 
-func (p productQuery) SelectAllProduct() ([]product.Core, error) {
+func (p *productQuery) SelectAllProduct() ([]product.Core, error) {
 	var productGorm []Product
 	tx := p.db.Find(&productGorm)
 	if tx.Error != nil {
@@ -38,7 +38,7 @@ func (p productQuery) SelectAllProduct() ([]product.Core, error) {
 	return productCore, nil
 }
 
-func (p productQuery) Insert(input product.Core) error {
+func (p *productQuery) Insert(input product.Core) error {
 	productGorm := Product{
 		UserID:        input.UserID,
 		ProductName:   input.ProductName,
@@ -53,7 +53,7 @@ func (p productQuery) Insert(input product.Core) error {
 	return nil
 }
 
-func (p productQuery) SelectProductById(id int) (*product.Core, error) {
+func (p *productQuery) SelectProductById(id int) (*product.Core, error) {
 	var productGorm Product
 	tx := p.db.First(&productGorm, id)
 	if tx.Error != nil {
@@ -71,7 +71,7 @@ func (p productQuery) SelectProductById(id int) (*product.Core, error) {
 	}, nil
 }
 
-func (p productQuery) SelectProductByUserId(id int) ([]product.Core, error) {
+func (p *productQuery) SelectProductByUserId(id int) ([]product.Core, error) {
 	var productGorm []Product
 	tx := p.db.Where("user_id = ?", id).Find(&productGorm)
 	if tx.Error != nil {
@@ -94,7 +94,7 @@ func (p productQuery) SelectProductByUserId(id int) ([]product.Core, error) {
 	return productCore, nil
 }
 
-func (p productQuery) Update(id int, input product.Core) error {
+func (p *productQuery) Update(id int, input product.Core) error {
 	productGorm := Product{
 		UserID:        input.UserID,
 		ProductName:   input.ProductName,
@@ -109,7 +109,7 @@ func (p productQuery) Update(id int, input product.Core) error {
 	return nil
 }
 
-func (p productQuery) Delete(id int) error {
+func (p *productQuery) Delete(id int) error {
 	tx := p.db.Delete(&Product{}, id)
 	if tx.Error != nil {
 		return tx.Error
