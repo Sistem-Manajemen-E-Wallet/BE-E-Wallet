@@ -5,9 +5,9 @@ import "time"
 type Core struct {
 	ID            int
 	UserID        int
-	ProductName   string
-	Description   string
-	Price         int
+	ProductName   string `validate:"required"`
+	Description   string `validate:"required"`
+	Price         int    `validate:"required"`
 	ProductImages string
 	CreatedAt     time.Time
 	UpdatedAt     time.Time
