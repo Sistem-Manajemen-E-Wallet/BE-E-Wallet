@@ -1052,10 +1052,42 @@
                     }
                 }
             }
+        },
+        "/topups": {
+            "post": {
+                "security": [
+                    {
+                        "JWTAuth": []
+                    }
+                ],
+                "tags": ["topups"],
+                "summary": "Top up request with token id",
+                "description": "Top up request with token id",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TopupRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TopupResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
-
-
 
     "components": {
         "securitySchemes": {
@@ -1263,6 +1295,76 @@
                     }
                 },
                 "required": ["product_name", "price", "description"]
+            },
+            "TopupRequest": {
+                "type": "object",
+                "properties": {
+                    "amount": {
+                        "type": "number",
+                        "format": "integer",
+                        "example": 25000
+                    },
+                    "channel_bank": {
+                        "type": "string",
+                        "example": "BCA"
+                    }
+                },
+                "required": ["amount", "channel_bank"]
+            },
+            "TopupResponse": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "Top up success"
+                    },
+                    "data": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "integer",
+                                "example": 1
+                            },
+                            "order_id": {
+                                "type": "string",
+                                "example": "order-2024-06-02-17:54:07-170865077"
+                            },
+                            "user_id": {
+                              "type": "integer",
+                              "example": 1
+                            },
+                            "amount": {
+                                "type": "number",
+                                "format": "integer",
+                                "example": 25000
+                            },
+                            "type": {
+                                "type": "string",
+                                "example": "Bank Transfer"
+                            },
+                            "channel_bank": {
+                                "type": "string",
+                                "example": "BCA"
+                            },
+                            "va_numbers": {
+                                "type": "string",
+                                "example": "1234567890"
+                            },
+                            "status": {
+                                "type": "string",
+                                "example": "pending"
+                            },
+                            "created_at": {
+                                "type": "string",
+                                "example": "2020-05-05"
+                            },
+                            "updated_at": {
+                                "type": "string",
+                                "example": "2020-05-05"
+                            }
+                        }
+                    }
+                }
             }
         },
         "responses": {
