@@ -514,6 +514,17 @@
                         "application/json":{
                             "schema":{
                                 "$ref": "#/components/schemas/transaction"
+                            },
+                            "example":{
+                                "value":{
+                                        "user_id": 5,
+                                        "product_id": 12,
+                                        "quantity": 1,
+                                        "total_cost": 10000,
+                                        "status_progress": "sedang dimasak",
+                                        "additional": "gapake acar",
+                                        "status_payment": "success"
+                                }
                             }
                         }
                     }
