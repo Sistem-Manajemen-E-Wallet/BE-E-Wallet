@@ -9,6 +9,6 @@ import (
 type Wallet struct {
 	gorm.Model
 	UserID  uint
-	Balance float64
+	Balance int
 	User    userData.User `gorm:"foreignKey:UserID"`
 }
