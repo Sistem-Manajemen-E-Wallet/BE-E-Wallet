@@ -3,7 +3,6 @@ package handler
 import (
 	"e-wallet/app/middlewares"
 	"e-wallet/features/transaction"
-	"e-wallet/features/transaction/service"
 	"e-wallet/utils/responses"
 	"net/http"
 	"strings"
@@ -12,10 +11,10 @@ import (
 )
 
 type transactionHandler struct {
-	ts service.TransactionService
+	ts transaction.ServiceInterface
 }
 
-func New(ts service.TransactionService) *transactionHandler {
+func New(ts transaction.ServiceInterface) *transactionHandler {
 	return &transactionHandler{
 		ts: ts,
 	}
