@@ -5,6 +5,9 @@ import (
 	productData "e-wallet/features/product/data"
 	productHandler "e-wallet/features/product/handler"
 	productService "e-wallet/features/product/service"
+	topupdata "e-wallet/features/topups/data"
+	topupHandler "e-wallet/features/topups/handler"
+	topupservice "e-wallet/features/topups/service"
 	userData "e-wallet/features/user/data"
 	userHandler "e-wallet/features/user/handler"
 	userService "e-wallet/features/user/service"
@@ -51,6 +54,12 @@ func InitRouter(e *echo.Echo, db *gorm.DB) {
 	e.GET("/users/:id/products", productHandler.GetProductByUserID, middlewares.JWTMiddleware())
 	e.POST("/products/:id/images", productHandler.UpdateProductImages, middlewares.JWTMiddleware())
 
+	dataTopup := topupdata.New(db)
+	topupService := topupservice.New(dataTopup, walletDataService, userDataService)
+	topupHandler := topupHandler.New(topupService)
+	e.POST("/topups", topupHandler.CreateTopup)
+
+	// e.GET("/topups")
 	// e.POST("/transactions")
 	// e.GET("/transactions")
 	// e.PUT("/transactions/:id")
