@@ -2,6 +2,7 @@ package data
 
 import (
 	"e-wallet/features/product"
+
 	"gorm.io/gorm"
 )
 
@@ -24,7 +25,7 @@ func (p *productQuery) SelectAllProduct() ([]product.Core, error) {
 	var productCore []product.Core
 	for _, v := range productGorm {
 		productCore = append(productCore, product.Core{
-			ID:            int(v.ID),
+			ID:            v.ID,
 			UserID:        v.UserID,
 			ProductName:   v.ProductName,
 			Description:   v.Description,
@@ -53,14 +54,14 @@ func (p *productQuery) Insert(input product.Core) error {
 	return nil
 }
 
-func (p *productQuery) SelectProductById(id int) (*product.Core, error) {
+func (p *productQuery) SelectProductById(id uint) (*product.Core, error) {
 	var productGorm Product
 	tx := p.db.First(&productGorm, id)
 	if tx.Error != nil {
 		return nil, tx.Error
 	}
 	return &product.Core{
-		ID:            int(productGorm.ID),
+		ID:            productGorm.ID,
 		UserID:        productGorm.UserID,
 		ProductName:   productGorm.ProductName,
 		Description:   productGorm.Description,
@@ -71,7 +72,7 @@ func (p *productQuery) SelectProductById(id int) (*product.Core, error) {
 	}, nil
 }
 
-func (p *productQuery) SelectProductByUserId(id int) ([]product.Core, error) {
+func (p *productQuery) SelectProductByUserId(id uint) ([]product.Core, error) {
 	var productGorm []Product
 	tx := p.db.Where("user_id = ?", id).Find(&productGorm)
 	if tx.Error != nil {
@@ -81,7 +82,7 @@ func (p *productQuery) SelectProductByUserId(id int) ([]product.Core, error) {
 	var productCore []product.Core
 	for _, v := range productGorm {
 		productCore = append(productCore, product.Core{
-			ID:            int(v.ID),
+			ID:            v.ID,
 			UserID:        v.UserID,
 			ProductName:   v.ProductName,
 			Description:   v.Description,
@@ -94,7 +95,7 @@ func (p *productQuery) SelectProductByUserId(id int) ([]product.Core, error) {
 	return productCore, nil
 }
 
-func (p *productQuery) Update(id int, input product.Core) error {
+func (p *productQuery) Update(id uint, input product.Core) error {
 	productGorm := Product{
 		UserID:        input.UserID,
 		ProductName:   input.ProductName,
@@ -109,7 +110,7 @@ func (p *productQuery) Update(id int, input product.Core) error {
 	return nil
 }
 
-func (p *productQuery) Delete(id int) error {
+func (p *productQuery) Delete(id uint) error {
 	tx := p.db.Delete(&Product{}, id)
 	if tx.Error != nil {
 		return tx.Error

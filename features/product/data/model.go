@@ -1,14 +1,18 @@
 package data
 
-import "time"
+import (
+	userData "e-wallet/features/user/data"
+	"time"
+)
 
 type Product struct {
 	ID            uint
-	UserID        int
+	UserID        uint
 	ProductName   string
 	Description   string
 	Price         int
 	ProductImages string
 	CreatedAt     time.Time
 	UpdatedAt     time.Time
+	User          userData.User `gorm:"foreignKey:UserID"`
 }

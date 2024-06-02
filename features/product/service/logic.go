@@ -4,6 +4,7 @@ import (
 	"e-wallet/features/product"
 	"e-wallet/features/user"
 	"errors"
+
 	"github.com/go-playground/validator/v10"
 )
 
@@ -58,8 +59,8 @@ func (p *productService) Create(input product.Core) error {
 	return p.productData.Insert(product)
 }
 
-func (p *productService) GetProductById(id int) (*product.Core, error) {
-	if id < 0 {
+func (p *productService) GetProductById(id uint) (*product.Core, error) {
+	if id <= 0 {
 		return nil, errors.New("id not valid")
 	}
 
@@ -70,8 +71,8 @@ func (p *productService) GetProductById(id int) (*product.Core, error) {
 	return result, nil
 }
 
-func (p *productService) GetProductByUserId(id int) ([]product.Core, error) {
-	if id < 0 {
+func (p *productService) GetProductByUserId(id uint) ([]product.Core, error) {
+	if id <= 0 {
 		return nil, errors.New("id not valid")
 	}
 
@@ -90,7 +91,7 @@ func (p *productService) GetProductByUserId(id int) ([]product.Core, error) {
 	return result, nil
 }
 
-func (p *productService) Update(id int, input product.Core) error {
+func (p *productService) Update(id uint, input product.Core) error {
 
 	product, err := p.productData.SelectProductById(id)
 	if err != nil {
@@ -108,7 +109,7 @@ func (p *productService) Update(id int, input product.Core) error {
 	return nil
 }
 
-func (p *productService) Delete(id int, userID int) error {
+func (p *productService) Delete(id uint, userID uint) error {
 
 	product, err := p.productData.SelectProductById(id)
 	if err != nil {
