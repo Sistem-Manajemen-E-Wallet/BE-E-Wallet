@@ -1,0 +1,97 @@
+package service
+
+import (
+	"e-wallet/features/topups"
+	"e-wallet/features/user"
+	"e-wallet/features/wallet"
+	"e-wallet/utils/midtranspay"
+	"e-wallet/utils/randomstring"
+	"errors"
+	"github.com/go-playground/validator/v10"
+	"strings"
+)
+
+type topupsService struct {
+	topupData  topups.DataInterface
+	userData   user.DataInterface
+	walletData wallet.DataInterface
+	validate   *validator.Validate
+	midtrans   midtranspay.Service
+}
+
+func New(data topups.DataInterface, walletData wallet.DataInterface, userData user.DataInterface) topups.ServiceInterface {
+	return &topupsService{
+		topupData:  data,
+		walletData: walletData,
+		userData:   userData,
+		validate:   validator.New(),
+		midtrans:   midtranspay.New(),
+	}
+}
+
+func (t *topupsService) Create(input topups.Core) (topups.Core, error) {
+	err := t.validate.Struct(input)
+
+	if err != nil {
+		return topups.Core{}, errors.New("[validation error] " + err.Error())
+	}
+
+	channelBank := strings.ToLower(input.ChannelBank)
+	if channelBank != "bca" && channelBank != "cimb" && channelBank != "bni" && channelBank != "bri" {
+		return topups.Core{}, errors.New("invalid channel bank")
+	}
+
+	userData, err := t.userData.SelectProfileById(uint(int(input.UserID)))
+	if err != nil {
+		return topups.Core{}, errors.New("user not found")
+	}
+
+	if userData.Role == "Merchant" {
+		return topups.Core{}, errors.New("user not authorized")
+	}
+
+	orderID := randomstring.GenerateRandomString()
+
+	payload := midtranspay.Topup{
+		OrderID: orderID,
+		Amount:  int(input.Amount),
+		Bank:    input.ChannelBank,
+	}
+
+	vaNumbers, err := t.midtrans.GetVaNumbers(payload)
+	if err != nil {
+		return topups.Core{}, errors.New("error getting va numbers")
+	}
+
+	topup := topups.Core{
+		OrderID:     orderID,
+		UserID:      input.UserID,
+		Amount:      input.Amount,
+		Type:        "Bank Transfer",
+		ChannelBank: input.ChannelBank,
+		Status:      "pending",
+		VaNumbers:   vaNumbers,
+	}
+
+	result, err := t.topupData.Insert(topup)
+	if err != nil {
+		return topups.Core{}, err
+	}
+
+	return result, nil
+}
+
+func (t *topupsService) GetByUserID(id int) ([]topups.Core, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (t *topupsService) Update(id int, input topups.Core) error {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (t *topupsService) GetByID(id int) (topups.Core, error) {
+	//TODO implement me
+	panic("implement me")
+}
