@@ -54,7 +54,7 @@ func (w *walletQuery) GetWalletById(id uint) (wallet.Core, error) {
 }
 
 // UpdateBalance implements wallet.DataInterface.
-func (w *walletQuery) UpdateBalanceMinus(id uint, amount float64) error {
+func (w *walletQuery) UpdateBalanceMinus(id uint, amount int) error {
 	result, err := w.GetWalletById(id)
 	if err != nil {
 		return err

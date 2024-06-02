@@ -3,6 +3,6 @@ package handler
 import "time"
 
 type WalletResponse struct {
-	Balance   float64
+	Balance   int
 	UpdatedAt time.Time
 }
