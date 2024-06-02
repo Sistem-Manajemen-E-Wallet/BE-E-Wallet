@@ -813,7 +813,6 @@
                     }
                 }
             },
-            "tags": ["products"],
             "parameters": [
                 {
                     "name": "id",
