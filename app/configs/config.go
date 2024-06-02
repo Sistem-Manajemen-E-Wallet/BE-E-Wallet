@@ -11,6 +11,7 @@ var (
 	CLOUDINARY_API_SECRET    string
 	CLOUDINARY_UPLOAD_FOLDER string
 	JWT_SECRET               string
+	MIDTRANS_SERVER_KEY      string
 )
 
 type AppConfig struct {
@@ -37,6 +38,7 @@ func ReadEnv() *AppConfig {
 	CLOUDINARY_API_KEY = os.Getenv("CLOUDINARY_API_KEY")
 	CLOUDINARY_API_SECRET = os.Getenv("CLOUDINARY_API_SECRET")
 	CLOUDINARY_UPLOAD_FOLDER = os.Getenv("CLOUDINARY_UPLOAD_FOLDER")
+	MIDTRANS_SERVER_KEY = os.Getenv("MIDTRANS_SERVER_KEY")
 	return &app
 }
 
