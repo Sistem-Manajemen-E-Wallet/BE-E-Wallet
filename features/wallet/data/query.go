@@ -76,3 +76,15 @@ func (w *walletQuery) UpdateBalanceMinus(id uint, amount int) error {
 
 	return nil
 }
+
+func (w *walletQuery) UpdateBalanceByTopup(input wallet.Core) error {
+	walletGorm := Wallet{
+		Balance: input.Balance,
+	}
+
+	tx := w.db.Model(&Wallet{}).Where("user_id = ?", input.UserID).Updates(walletGorm)
+	if tx.Error != nil {
+		return tx.Error
+	}
+	return nil
+}
