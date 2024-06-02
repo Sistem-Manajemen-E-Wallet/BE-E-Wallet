@@ -24,8 +24,8 @@ func InitRouter(e *echo.Echo, db *gorm.DB) {
 	WalletHandler := handler.New(walletService)
 
 	hashService := encrypts.NewHashService()
-	userData := userData.New(db, walletDataService)
-	userService := userService.New(userData, hashService)
+	userDataService := userData.New(db, walletDataService)
+	userService := userService.New(userDataService, hashService)
 	userHandler := userHandler.New(userService)
 
 	e.POST("/login", userHandler.Login)
@@ -48,7 +48,7 @@ func InitRouter(e *echo.Echo, db *gorm.DB) {
 	// e.PUT("/transactions/:id")
 
 	dataProduct := productData.New(db)
-	productService := productService.New(dataProduct, dataService)
+	productService := productService.New(dataProduct, userDataService)
 	productHandler := productHandler.New(productService)
 
 	e.GET("/products", productHandler.GetAllProduct, middlewares.JWTMiddleware())
