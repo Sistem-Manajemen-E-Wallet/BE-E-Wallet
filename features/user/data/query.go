@@ -2,17 +2,20 @@ package data
 
 import (
 	"e-wallet/features/user"
+	"e-wallet/features/wallet"
 
 	"gorm.io/gorm"
 )
 
 type userQuery struct {
-	db *gorm.DB
+	db         *gorm.DB
+	walletData wallet.DataInterface
 }
 
-func New(db *gorm.DB) user.DataInterface {
+func New(db *gorm.DB, wallet wallet.DataInterface) user.DataInterface {
 	return &userQuery{
-		db: db,
+		db:         db,
+		walletData: wallet,
 	}
 }
 
@@ -30,6 +33,13 @@ func (u *userQuery) Insert(input user.Core) error {
 	tx := u.db.Create(&userGorm)
 	if tx.Error != nil {
 		return tx.Error
+	}
+
+	userID := userGorm.ID
+
+	tx2 := u.walletData.CreateWallet(userID)
+	if tx2 != nil {
+		return tx2
 	}
 
 	return nil
