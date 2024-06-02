@@ -8,11 +8,14 @@ import (
 	topupdata "e-wallet/features/topups/data"
 	topupHandler "e-wallet/features/topups/handler"
 	topupservice "e-wallet/features/topups/service"
+	transactionData "e-wallet/features/transaction/data"
+	transactionHandler "e-wallet/features/transaction/handler"
+	transactionService "e-wallet/features/transaction/service"
 	userData "e-wallet/features/user/data"
 	userHandler "e-wallet/features/user/handler"
 	userService "e-wallet/features/user/service"
 	walletData "e-wallet/features/wallet/data"
-	"e-wallet/features/wallet/handler"
+	walletHandler "e-wallet/features/wallet/handler"
 	walletService "e-wallet/features/wallet/service"
 	encrypts "e-wallet/utils"
 
@@ -24,12 +27,24 @@ func InitRouter(e *echo.Echo, db *gorm.DB) {
 
 	walletDataService := walletData.New(db)
 	walletService := walletService.New(walletDataService)
-	WalletHandler := handler.New(walletService)
+	WalletHandler := walletHandler.New(walletService)
 
 	hashService := encrypts.NewHashService()
 	userDataService := userData.New(db, walletDataService)
 	userService := userService.New(userDataService, hashService)
 	userHandler := userHandler.New(userService)
+
+	dataProduct := productData.New(db)
+	productService := productService.New(dataProduct, userDataService)
+	productHandler := productHandler.New(productService)
+
+	dataTopup := topupdata.New(db)
+	topupService := topupservice.New(dataTopup, walletDataService, userDataService)
+	topupHandler := topupHandler.New(topupService)
+
+	dataTransaction := transactionData.New(db, dataProduct)
+	transactionService := transactionService.New(dataTransaction)
+	transactionHandler := transactionHandler.New(transactionService)
 
 	e.POST("/login", userHandler.Login)
 
@@ -42,10 +57,6 @@ func InitRouter(e *echo.Echo, db *gorm.DB) {
 
 	e.GET("/wallets", WalletHandler.GetWalletById, middlewares.JWTMiddleware())
 
-	dataProduct := productData.New(db)
-	productService := productService.New(dataProduct, userDataService)
-	productHandler := productHandler.New(productService)
-
 	e.GET("/products", productHandler.GetAllProduct, middlewares.JWTMiddleware())
 	e.POST("/products", productHandler.CreateProduct, middlewares.JWTMiddleware())
 	e.GET("/products/:id", productHandler.GetProductByID, middlewares.JWTMiddleware())
@@ -54,13 +65,9 @@ func InitRouter(e *echo.Echo, db *gorm.DB) {
 	e.GET("/users/:id/products", productHandler.GetProductByUserID, middlewares.JWTMiddleware())
 	e.POST("/products/:id/images", productHandler.UpdateProductImages, middlewares.JWTMiddleware())
 
-	dataTopup := topupdata.New(db)
-	topupService := topupservice.New(dataTopup, walletDataService, userDataService)
-	topupHandler := topupHandler.New(topupService)
 	e.POST("/topups", topupHandler.CreateTopup)
 
-	// e.GET("/topups")
-	// e.POST("/transactions")
+	e.POST("/transactions", transactionHandler.CreateTransaction, middlewares.JWTMiddleware())
 	// e.GET("/transactions")
 	// e.PUT("/transactions/:id")
 
