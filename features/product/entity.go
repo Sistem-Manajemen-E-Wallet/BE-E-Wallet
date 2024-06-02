@@ -3,8 +3,8 @@ package product
 import "time"
 
 type Core struct {
-	ID            int
-	UserID        int
+	ID            uint
+	UserID        uint
 	ProductName   string `validate:"required"`
 	Description   string `validate:"required"`
 	Price         int    `validate:"required"`
@@ -16,17 +16,17 @@ type Core struct {
 type DataInterface interface {
 	Insert(input Core) error
 	SelectAllProduct() ([]Core, error)
-	SelectProductById(id int) (*Core, error)
-	SelectProductByUserId(id int) ([]Core, error)
-	Update(id int, input Core) error
-	Delete(input int) error
+	SelectProductById(id uint) (*Core, error)
+	SelectProductByUserId(id uint) ([]Core, error)
+	Update(id uint, input Core) error
+	Delete(input uint) error
 }
 
 type ServiceInterface interface {
 	Create(input Core) error
-	GetProductById(id int) (*Core, error)
+	GetProductById(id uint) (*Core, error)
 	GetAllProduct() ([]Core, error)
-	GetProductByUserId(id int) ([]Core, error)
-	Update(id int, input Core) error
-	Delete(input, userID int) error
+	GetProductByUserId(id uint) ([]Core, error)
+	Update(id uint, input Core) error
+	Delete(input uint, userID uint) error
 }

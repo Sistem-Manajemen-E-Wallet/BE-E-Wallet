@@ -5,9 +5,10 @@ import (
 	"e-wallet/features/product"
 	"e-wallet/utils/responses"
 	"e-wallet/utils/upload"
-	"github.com/labstack/echo/v4"
 	"net/http"
 	"strconv"
+
+	"github.com/labstack/echo/v4"
 )
 
 type productHandler struct {
@@ -45,7 +46,7 @@ func (ph *productHandler) CreateProduct(c echo.Context) error {
 	}
 
 	inputCore := product.Core{
-		UserID:      idToken,
+		UserID:      uint(idToken),
 		ProductName: newProduct.ProductName,
 		Description: newProduct.Description,
 		Price:       newProduct.Price,
@@ -66,7 +67,7 @@ func (ph *productHandler) GetProductByID(c echo.Context) error {
 		return c.JSON(http.StatusUnprocessableEntity, responses.WebJSONResponse("error convert data: "+err.Error(), nil))
 	}
 
-	result, err := ph.productService.GetProductById(idInt)
+	result, err := ph.productService.GetProductById(uint(idInt))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, responses.WebJSONResponse("error read data: "+err.Error(), nil))
 	}
@@ -92,12 +93,12 @@ func (ph *productHandler) UpdateProduct(c echo.Context) error {
 	}
 
 	inputCore := product.Core{
-		UserID:      idToken,
+		UserID:      uint(idToken),
 		ProductName: updateProduct.ProductName,
 		Description: updateProduct.Description,
 		Price:       updateProduct.Price,
 	}
-	err = ph.productService.Update(idInt, inputCore)
+	err = ph.productService.Update(uint(idInt), inputCore)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, responses.WebJSONResponse("error update data: "+err.Error(), nil))
 	}
@@ -130,11 +131,11 @@ func (ph *productHandler) UpdateProductImages(c echo.Context) error {
 	}
 
 	inputCore := product.Core{
-		UserID:        idToken,
+		UserID:        uint(idToken),
 		ProductImages: uploadUrl,
 	}
 
-	err = ph.productService.Update(idInt, inputCore)
+	err = ph.productService.Update(uint(idInt), inputCore)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, responses.WebJSONResponse("error update data: "+err.Error(), nil))
 	}
@@ -150,7 +151,7 @@ func (ph *productHandler) DeleteProduct(c echo.Context) error {
 		return c.JSON(http.StatusUnprocessableEntity, responses.WebJSONResponse("error convert data: "+err.Error(), nil))
 	}
 
-	err = ph.productService.Delete(idInt, idToken)
+	err = ph.productService.Delete(uint(idInt), uint(idToken))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, responses.WebJSONResponse("error delete data: "+err.Error(), nil))
 	}
@@ -165,7 +166,7 @@ func (ph *productHandler) GetProductByUserID(c echo.Context) error {
 		return c.JSON(http.StatusUnprocessableEntity, responses.WebJSONResponse("error convert data: "+err.Error(), nil))
 	}
 
-	results, err := ph.productService.GetProductByUserId(idUser)
+	results, err := ph.productService.GetProductByUserId(uint(idUser))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, responses.WebJSONResponse("error read data: "+err.Error(), nil))
 	}
