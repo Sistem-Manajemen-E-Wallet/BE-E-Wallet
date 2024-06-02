@@ -516,14 +516,10 @@
                                 "$ref": "#/components/schemas/transaction"
                             },
                             "example":{
-                                "value":{
-                                        "user_id": 5,
+                                "value":{                                        
                                         "product_id": 12,
-                                        "quantity": 1,
-                                        "total_cost": 10000,
-                                        "status_progress": "sedang dimasak",
-                                        "additional": "gapake acar",
-                                        "status_payment": "success"
+                                        "quantity": 1,                                    
+                                        "additional": "gapake acar"                                       
                                 }
                             }
                         }
@@ -1137,11 +1133,7 @@
             },
             "transaction":{
                 "type": "object",
-                "properties": {
-                    "user_id": {
-                        "type": "integer",
-                        "example": 5
-                    },
+                "properties": {                    
                     "product_id": {
                         "type": "integer",
                         "example": 12
@@ -1150,25 +1142,12 @@
                         "type": "integer",
                         "example": 1
                     },
-                    "total_cost": {
-                        "type": "number",
-                        "format": "float",
-                        "example": 1000.0
-                    },
-                    "status_progress": {
-                        "type": "string",
-                        "example": "sudah diantar"
-                    },
                     "additional":{
                         "type": "string",
                         "example": "gapake acar"
-                    },
-                    "status_payment": {
-                        "type": "string",
-                        "example": "success"
                     }
                 },
-                "required": ["user_id", "product_id", "quantity", "total_cost", "status_progress", "additional", "status_payment"]
+                "required": ["product_id", "quantity"]
             },
             "all_transaction":{
                 "type": "array",
