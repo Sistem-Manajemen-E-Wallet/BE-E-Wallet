@@ -39,16 +39,8 @@ func InitRouter(e *echo.Echo, db *gorm.DB) {
 
 	e.GET("/wallets", WalletHandler.GetWalletById, middlewares.JWTMiddleware())
 
-	// e.POST("/topup")
-
-	// e.GET("/histories")
-
-	// e.POST("/transactions")
-	// e.GET("/transactions")
-	// e.PUT("/transactions/:id")
-
 	dataProduct := productData.New(db)
-	productService := productService.New(dataProduct, dataService)
+	productService := productService.New(dataProduct, userData)
 	productHandler := productHandler.New(productService)
 
 	e.GET("/products", productHandler.GetAllProduct, middlewares.JWTMiddleware())
@@ -58,4 +50,12 @@ func InitRouter(e *echo.Echo, db *gorm.DB) {
 	e.DELETE("/products/:id", productHandler.DeleteProduct, middlewares.JWTMiddleware())
 	e.GET("/users/:id/products", productHandler.GetProductByUserID, middlewares.JWTMiddleware())
 	e.POST("/products/:id/images", productHandler.UpdateProductImages, middlewares.JWTMiddleware())
+
+	// e.POST("/topup")
+
+	// e.GET("/histories")
+
+	// e.POST("/transactions")
+	// e.GET("/transactions")
+	// e.PUT("/transactions/:id")
 }
