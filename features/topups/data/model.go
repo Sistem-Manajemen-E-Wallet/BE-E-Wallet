@@ -1,6 +1,9 @@
 package data
 
-import "time"
+import (
+	userData "e-wallet/features/user/data"
+	"time"
+)
 
 type TopUp struct {
 	ID          int
@@ -13,4 +16,5 @@ type TopUp struct {
 	Status      string
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
+	User        userData.User `gorm:"foreignKey:UserID"`
 }
