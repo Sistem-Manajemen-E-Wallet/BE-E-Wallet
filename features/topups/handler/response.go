@@ -32,3 +32,11 @@ func toResponse(topup topups.Core) TopupResponse {
 		UpdatedAt:   topup.UpdatedAt,
 	}
 }
+
+func toResponses(topups []topups.Core) []TopupResponse {
+	var topupResponses []TopupResponse
+	for _, topup := range topups {
+		topupResponses = append(topupResponses, toResponse(topup))
+	}
+	return topupResponses
+}

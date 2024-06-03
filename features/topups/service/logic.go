@@ -82,8 +82,16 @@ func (t *topupsService) Create(input topups.Core) (topups.Core, error) {
 }
 
 func (t *topupsService) GetByUserID(id int) ([]topups.Core, error) {
-	//TODO implement me
-	panic("implement me")
+	if id <= 0 {
+		return []topups.Core{}, errors.New("invalid user id")
+	}
+
+	result, err := t.topupData.SelectByUserID(id)
+	if err != nil {
+		return []topups.Core{}, errors.New("topup not found")
+	}
+
+	return result, nil
 }
 
 func (t *topupsService) Update(input topups.Core) error {

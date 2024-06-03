@@ -42,12 +42,6 @@ func (t *topupQuery) Insert(input topups.Core) (topups.Core, error) {
 		CreatedAt:   topupGorm.CreatedAt,
 		UpdatedAt:   topupGorm.UpdatedAt,
 	}, nil
-
-	//tx := t.db.Create(&topupGorm)
-	//if tx.Error != nil {
-	//	return tx.Error
-	//}
-	//return nil
 }
 
 func (t *topupQuery) SelectByUserID(id int) ([]topups.Core, error) {
