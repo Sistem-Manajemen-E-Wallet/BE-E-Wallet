@@ -25,7 +25,7 @@ type DataInterface interface {
 
 type ServiceInterface interface {
 	Create(input Core) (Core, error)
-	GetByID(id int) (Core, error)
+	GetByID(id int, userID int) (Core, error)
 	GetByUserID(id int) ([]Core, error)
 	Update(input Core) error
 }
