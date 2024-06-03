@@ -61,6 +61,7 @@ func (t *topupQuery) SelectByUserID(id int) ([]topups.Core, error) {
 	for _, v := range topupGorm {
 		topupCore = append(topupCore, topups.Core{
 			ID:          int(v.ID),
+			OrderID:     v.OrderID,
 			UserID:      v.UserID,
 			Amount:      v.Amount,
 			Type:        v.Type,
@@ -77,6 +78,7 @@ func (t *topupQuery) SelectByUserID(id int) ([]topups.Core, error) {
 func (t *topupQuery) Update(id int, input topups.Core) error {
 	topupGorm := TopUp{
 		UserID:      input.UserID,
+		OrderID:     input.OrderID,
 		Amount:      input.Amount,
 		Type:        input.Type,
 		ChannelBank: input.ChannelBank,
@@ -100,6 +102,27 @@ func (t *topupQuery) SelectById(id int) (topups.Core, error) {
 	return topups.Core{
 		ID:          int(topupGorm.ID),
 		UserID:      topupGorm.UserID,
+		OrderID:     topupGorm.OrderID,
+		Amount:      topupGorm.Amount,
+		Type:        topupGorm.Type,
+		ChannelBank: topupGorm.ChannelBank,
+		VaNumbers:   topupGorm.VaNumbers,
+		Status:      topupGorm.Status,
+		CreatedAt:   topupGorm.CreatedAt,
+		UpdatedAt:   topupGorm.UpdatedAt,
+	}, nil
+}
+
+func (t *topupQuery) SelectByOrderID(id string) (topups.Core, error) {
+	var topupGorm TopUp
+	tx := t.db.Where("order_id = ?", id).First(&topupGorm)
+	if tx.Error != nil {
+		return topups.Core{}, tx.Error
+	}
+	return topups.Core{
+		ID:          int(topupGorm.ID),
+		UserID:      topupGorm.UserID,
+		OrderID:     topupGorm.OrderID,
 		Amount:      topupGorm.Amount,
 		Type:        topupGorm.Type,
 		ChannelBank: topupGorm.ChannelBank,

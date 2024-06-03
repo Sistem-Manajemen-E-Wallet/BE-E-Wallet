@@ -86,9 +86,34 @@ func (t *topupsService) GetByUserID(id int) ([]topups.Core, error) {
 	panic("implement me")
 }
 
-func (t *topupsService) Update(id int, input topups.Core) error {
-	//TODO implement me
-	panic("implement me")
+func (t *topupsService) Update(input topups.Core) error {
+	topup, err := t.topupData.SelectByOrderID(input.OrderID)
+	if err != nil {
+		return errors.New("topup not found")
+	}
+
+	if topup.Status == "paid" {
+		return errors.New("topup status cannot be updated")
+	}
+
+	topup.Status = "paid"
+	tx := t.topupData.Update(int(topup.ID), topup)
+	if tx != nil {
+		return errors.New("error updating topup")
+	}
+
+	wallet, err := t.walletData.GetWalletByUserId(uint(topup.UserID))
+	if err != nil {
+		return errors.New("wallet not found")
+	}
+
+	wallet.Balance += int(topup.Amount)
+	tx = t.walletData.UpdateBalanceByTopup(wallet)
+	if tx != nil {
+		return errors.New("error updating wallet")
+	}
+
+	return nil
 }
 
 func (t *topupsService) GetByID(id int) (topups.Core, error) {
