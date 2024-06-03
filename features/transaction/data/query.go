@@ -1,8 +1,10 @@
 package data
 
 import (
+	"e-wallet/features/history"
 	"e-wallet/features/product"
 	"e-wallet/features/transaction"
+	"e-wallet/features/wallet"
 
 	"gorm.io/gorm"
 )
@@ -10,12 +12,16 @@ import (
 type TransactionQuery struct {
 	db *gorm.DB
 	pd product.DataInterface
+	hd history.DataInterface
+	wd wallet.DataInterface
 }
 
-func New(db *gorm.DB, pd product.DataInterface) transaction.DataInterface {
+func New(db *gorm.DB, pd product.DataInterface, hd history.DataInterface, wd wallet.DataInterface) transaction.DataInterface {
 	return &TransactionQuery{
 		db: db,
 		pd: pd,
+		hd: hd,
+		wd: wd,
 	}
 }
 
@@ -39,9 +45,34 @@ func (t *TransactionQuery) Insert(input transaction.Core) error {
 		MerchantID:     result.UserID,
 	}
 
+	err3 := t.wd.UpdateBalanceMinus(input.UserID, transactionGorm.TotalCost)
+	if err3 != nil {
+		return err3
+	}
+
+	err4 := t.wd.UpdateBalancePlus(result.UserID, transactionGorm.TotalCost)
+	if err4 != nil {
+		return err4
+	}
+
 	tx := t.db.Create(&transactionGorm)
 	if tx.Error != nil {
 		return tx.Error
+	}
+
+	historyGorm := history.Core{
+		UserID:        transactionGorm.UserID,
+		TransactionID: transactionGorm.ID,
+		TrxName:       result.ProductName,
+		Amount:        transactionGorm.TotalCost,
+		Type:          "payment",
+		Status:        transactionGorm.StatusPayment,
+		CreatedAt:     transactionGorm.CreatedAt,
+	}
+
+	err2 := t.hd.InsertHistory(historyGorm)
+	if err2 != nil {
+		return err2
 	}
 	return nil
 }
