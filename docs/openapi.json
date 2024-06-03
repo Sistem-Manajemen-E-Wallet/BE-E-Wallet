@@ -1103,6 +1103,42 @@
                     }
                 }
             }
+        },
+        "/topups/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "JWTAuth": []
+                    }
+                ],
+                "tags": [
+                    "topups"
+                ],
+                "summary": "Get topup by id",
+                "description": "Get topup by id",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TopupGetByIdResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
 
@@ -1466,6 +1502,61 @@
                                     "type": "string",
                                     "example": "2020-05-05"
                                 }
+                            }
+                        }
+                    }
+                }
+            },
+            "TopupGetByIdResponse": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "description": "success get topup by id"
+                    },
+                    "data": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "integer",
+                                "example": 1
+                            },
+                            "order_id": {
+                                "type": "string",
+                                "example": "order-2024-06-02-17:54:07-170865077"
+                            },
+                            "user_id": {
+                                "type": "integer",
+                                "example": 1
+                            },
+                            "amount": {
+                                "type": "number",
+                                "format": "integer",
+                                "example": 25000
+                            },
+                            "type": {
+                                "type": "string",
+                                "example": "Bank Transfer"
+                            },
+                            "channel_bank": {
+                                "type": "string",
+                                "example": "BCA"
+                            },
+                            "va_numbers": {
+                                "type": "string",
+                                "example": "1234567890"
+                            },
+                            "status": {
+                                "type": "string",
+                                "example": "pending"
+                            },
+                            "created_at": {
+                                "type": "string",
+                                "example": "2020-05-05"
+                            },
+                            "updated_at": {
+                                "type": "string",
+                                "example": "2020-05-05"
                             }
                         }
                     }
