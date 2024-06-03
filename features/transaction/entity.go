@@ -5,6 +5,7 @@ import "time"
 type Core struct {
 	ID             uint
 	UserID         uint
+	OrderID        int
 	ProductID      uint
 	Quantity       int
 	TotalCost      int
@@ -18,7 +19,6 @@ type Core struct {
 
 type DataInterface interface {
 	Insert(input Core) error
-	SelectAllTransaction() ([]Core, error)
 	SelectTransactionById(id uint) (*Core, error)
 	SelectTransactionByMerchantId(id uint) ([]Core, error)
 	UpdateStatusProgress(input Core) error
@@ -27,7 +27,6 @@ type DataInterface interface {
 
 type ServiceInterface interface {
 	Create(input Core) error
-	GetAllTransaction() ([]Core, error)
 	GetTransactionById(id uint) (*Core, error)
 	GetTransactionByMerchantId(id uint) ([]Core, error)
 	UpdateStatusProgress(id uint, input Core) error

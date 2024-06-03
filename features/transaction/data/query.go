@@ -29,6 +29,7 @@ func (t *TransactionQuery) Insert(input transaction.Core) error {
 	transactionGorm := Transaction{
 		Model:          gorm.Model{},
 		UserID:         input.UserID,
+		OrderID:        input.OrderID,
 		ProductID:      input.ProductID,
 		Quantity:       input.Quantity,
 		TotalCost:      result.Price * input.Quantity,
@@ -45,11 +46,6 @@ func (t *TransactionQuery) Insert(input transaction.Core) error {
 	return nil
 }
 
-// SelectAllTransaction implements transaction.DataInterface.
-func (t *TransactionQuery) SelectAllTransaction() ([]transaction.Core, error) {
-	panic("unimplemented")
-}
-
 // SelectTransactionById implements transaction.DataInterface.
 func (t *TransactionQuery) SelectTransactionById(id uint) (*transaction.Core, error) {
 	panic("unimplemented")
@@ -57,7 +53,30 @@ func (t *TransactionQuery) SelectTransactionById(id uint) (*transaction.Core, er
 
 // SelectTransactionByMerchantId implements transaction.DataInterface.
 func (t *TransactionQuery) SelectTransactionByMerchantId(id uint) ([]transaction.Core, error) {
-	panic("unimplemented")
+	var transactionGorm []Transaction
+	tx := t.db.Where("merchant_id = ?", id).Find(&transactionGorm)
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+
+	var transactionCore []transaction.Core
+	for _, v := range transactionGorm {
+		transactionCore = append(transactionCore, transaction.Core{
+			ID:             v.ID,
+			UserID:         v.UserID,
+			OrderID:        v.OrderID,
+			ProductID:      v.ProductID,
+			Quantity:       v.Quantity,
+			TotalCost:      v.TotalCost,
+			StatusProgress: v.StatusProgress,
+			Additional:     v.Additional,
+			StatusPayment:  v.StatusPayment,
+			MerchantID:     id,
+			CreatedAt:      v.CreatedAt,
+			UpdatedAt:      v.UpdatedAt,
+		})
+	}
+	return transactionCore, nil
 }
 
 // UpdateStatusProgress implements transaction.DataInterface.

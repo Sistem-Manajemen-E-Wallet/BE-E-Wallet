@@ -17,7 +17,7 @@ func New(td transaction.DataInterface) transaction.ServiceInterface {
 
 // Create implements transaction.ServiceInterface.
 func (t *TransactionService) Create(input transaction.Core) error {
-	if input.UserID == 0 || input.ProductID == 0 || input.Quantity == 0 {
+	if input.UserID == 0 || input.OrderID == 0 || input.ProductID == 0 || input.Quantity == 0 {
 		return errors.New("[validation] nama/email/pin/phone tidak boleh kosong")
 	}
 
@@ -29,11 +29,6 @@ func (t *TransactionService) Create(input transaction.Core) error {
 	return nil
 }
 
-// GetAllProduct implements transaction.ServiceInterface.
-func (t *TransactionService) GetAllTransaction() ([]transaction.Core, error) {
-	panic("unimplemented")
-}
-
 // GetTransactionById implements transaction.ServiceInterface.
 func (t *TransactionService) GetTransactionById(id uint) (*transaction.Core, error) {
 	panic("unimplemented")
@@ -41,7 +36,12 @@ func (t *TransactionService) GetTransactionById(id uint) (*transaction.Core, err
 
 // GetTransactionByMerchantId implements transaction.ServiceInterface.
 func (t *TransactionService) GetTransactionByMerchantId(id uint) ([]transaction.Core, error) {
-	panic("unimplemented")
+	result, err := t.transactionData.SelectTransactionByMerchantId(id)
+	if err != nil {
+		return nil, errors.New("product not found")
+	}
+
+	return result, nil
 }
 
 // UpdateStatusProgress implements transaction.ServiceInterface.

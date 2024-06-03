@@ -30,6 +30,7 @@ func (th *transactionHandler) CreateTransaction(c echo.Context) error {
 
 	inputCore := transaction.Core{
 		UserID:     uint(idToken),
+		OrderID:    newTransaction.OrderID,
 		ProductID:  newTransaction.ProductID,
 		Quantity:   newTransaction.Quantity,
 		Additional: newTransaction.Additional,
@@ -44,4 +45,21 @@ func (th *transactionHandler) CreateTransaction(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusCreated, responses.WebJSONResponse("success create transaction", nil))
+}
+
+func (th *transactionHandler) GetTransactionByMerchantId(c echo.Context) error {
+	idToken := middlewares.ExtractTokenUserId(c)
+
+	result, err := th.ts.GetTransactionByMerchantId(uint(idToken))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, responses.WebJSONResponse("error read data: "+err.Error(), nil))
+	}
+
+	data := toCoreList(result)
+
+	if len(result) == 0 {
+		return c.JSON(http.StatusOK, responses.WebJSONResponse("success get all transactions", nil))
+	}
+
+	return c.JSON(http.StatusOK, responses.WebJSONResponse("success get all transactions", data))
 }
