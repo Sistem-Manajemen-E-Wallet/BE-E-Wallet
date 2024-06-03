@@ -2,6 +2,9 @@ package routes
 
 import (
 	"e-wallet/app/middlewares"
+	historyData "e-wallet/features/history/data"
+	historyHandler "e-wallet/features/history/handler"
+	historyService "e-wallet/features/history/service"
 	productData "e-wallet/features/product/data"
 	productHandler "e-wallet/features/product/handler"
 	productService "e-wallet/features/product/service"
@@ -46,6 +49,10 @@ func InitRouter(e *echo.Echo, db *gorm.DB) {
 	transactionService := transactionService.New(dataTransaction, dataProduct)
 	transactionHandler := transactionHandler.New(transactionService)
 
+	dataHistory := historyData.New(db)
+	historyService := historyService.New(dataHistory)
+	historyHandler := historyHandler.New(historyService)
+
 	e.POST("/login", userHandler.Login)
 
 	e.POST("/users/customer", userHandler.RegisterCustomer)
@@ -72,8 +79,6 @@ func InitRouter(e *echo.Echo, db *gorm.DB) {
 	e.GET("/transactions", transactionHandler.GetTransactionByMerchantId, middlewares.JWTMiddleware())
 	e.PUT("/transactions/:id", transactionHandler.UpdateStatusProgress, middlewares.JWTMiddleware())
 
-	// e.POST("/topup")
-
-	// e.GET("/histories")
+	e.GET("/histories", historyHandler.GetAllHistory, middlewares.JWTMiddleware())
 
 }
