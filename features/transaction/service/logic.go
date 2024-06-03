@@ -1,6 +1,7 @@
 package service
 
 import (
+	"e-wallet/features/product"
 	"e-wallet/features/transaction"
 	"errors"
 )
@@ -9,7 +10,7 @@ type TransactionService struct {
 	transactionData transaction.DataInterface
 }
 
-func New(td transaction.DataInterface) transaction.ServiceInterface {
+func New(td transaction.DataInterface, pd product.DataInterface) transaction.ServiceInterface {
 	return &TransactionService{
 		transactionData: td,
 	}
@@ -17,8 +18,11 @@ func New(td transaction.DataInterface) transaction.ServiceInterface {
 
 // Create implements transaction.ServiceInterface.
 func (t *TransactionService) Create(input transaction.Core) error {
+	if input.UserID == 0 {
+		return errors.New("[validation] you must login first")
+	}
 	if input.UserID == 0 || input.OrderID == 0 || input.ProductID == 0 || input.Quantity == 0 {
-		return errors.New("[validation] nama/email/pin/phone tidak boleh kosong")
+		return errors.New("[validation] nomor meja/produk/quantity tidak boleh kosong")
 	}
 
 	err := t.transactionData.Insert(input)
@@ -45,6 +49,14 @@ func (t *TransactionService) GetTransactionByMerchantId(id uint) ([]transaction.
 }
 
 // UpdateStatusProgress implements transaction.ServiceInterface.
-func (t *TransactionService) UpdateStatusProgress(id uint, input transaction.Core) error {
-	panic("unimplemented")
+func (t *TransactionService) UpdateStatusProgress(idUser uint, id uint, input transaction.Core) error {
+	result, err := t.transactionData.SelectTransactionById(id)
+	if err != nil {
+		return errors.New("transaction not found")
+	}
+	if result.MerchantID != idUser {
+		return errors.New("it's not your transaction")
+	}
+
+	return t.transactionData.UpdateStatusProgress(id, input)
 }

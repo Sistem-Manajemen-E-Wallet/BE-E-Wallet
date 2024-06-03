@@ -43,7 +43,7 @@ func InitRouter(e *echo.Echo, db *gorm.DB) {
 	topupHandler := topupHandler.New(topupService)
 
 	dataTransaction := transactionData.New(db, dataProduct)
-	transactionService := transactionService.New(dataTransaction)
+	transactionService := transactionService.New(dataTransaction, dataProduct)
 	transactionHandler := transactionHandler.New(transactionService)
 
 	e.POST("/login", userHandler.Login)
@@ -70,7 +70,7 @@ func InitRouter(e *echo.Echo, db *gorm.DB) {
 
 	e.POST("/transactions", transactionHandler.CreateTransaction, middlewares.JWTMiddleware())
 	e.GET("/transactions", transactionHandler.GetTransactionByMerchantId, middlewares.JWTMiddleware())
-	// e.PUT("/transactions/:id")
+	e.PUT("/transactions/:id", transactionHandler.UpdateStatusProgress, middlewares.JWTMiddleware())
 
 	// e.POST("/topup")
 

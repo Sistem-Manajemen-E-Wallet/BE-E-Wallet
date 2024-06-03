@@ -12,12 +12,12 @@ type Transaction struct {
 	UserID         uint
 	OrderID        int
 	ProductID      uint
+	MerchantID     uint
 	Quantity       int
 	TotalCost      int
 	StatusProgress string
 	Additional     string
 	StatusPayment  string
-	MerchantID     uint
 	User           userData.User       `gorm:"foreignKey:UserID"`
 	Product        productData.Product `gorm:"foreignKey:ProductID"`
 }

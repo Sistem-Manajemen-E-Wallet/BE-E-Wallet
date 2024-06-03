@@ -21,7 +21,7 @@ type DataInterface interface {
 	Insert(input Core) error
 	SelectTransactionById(id uint) (*Core, error)
 	SelectTransactionByMerchantId(id uint) ([]Core, error)
-	UpdateStatusProgress(input Core) error
+	UpdateStatusProgress(id uint, input Core) error
 	// SelectTransactionByUserId(id uint) ([]Core, error)
 }
 
@@ -29,5 +29,5 @@ type ServiceInterface interface {
 	Create(input Core) error
 	GetTransactionById(id uint) (*Core, error)
 	GetTransactionByMerchantId(id uint) ([]Core, error)
-	UpdateStatusProgress(id uint, input Core) error
+	UpdateStatusProgress(idUser uint, id uint, input Core) error
 }
