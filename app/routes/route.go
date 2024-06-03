@@ -41,10 +41,6 @@ func InitRouter(e *echo.Echo, db *gorm.DB) {
 	productService := productService.New(dataProduct, userDataService)
 	productHandler := productHandler.New(productService)
 
-	dataTopup := topupdata.New(db)
-	topupService := topupservice.New(dataTopup, walletDataService, userDataService)
-	topupHandler := topupHandler.New(topupService)
-
 	dataHistory := historyData.New(db)
 	historyService := historyService.New(dataHistory)
 	historyHandler := historyHandler.New(historyService)
@@ -52,6 +48,10 @@ func InitRouter(e *echo.Echo, db *gorm.DB) {
 	dataTransaction := transactionData.New(db, dataProduct, dataHistory, walletDataService)
 	transactionService := transactionService.New(dataTransaction, walletDataService, dataProduct)
 	transactionHandler := transactionHandler.New(transactionService)
+
+	dataTopup := topupdata.New(db)
+	topupService := topupservice.New(dataTopup, walletDataService, userDataService, dataHistory)
+	topupHandler := topupHandler.New(topupService)
 
 	e.POST("/login", userHandler.Login)
 
