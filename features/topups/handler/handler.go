@@ -61,3 +61,18 @@ func (th *topupHandler) TopUpNotification(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, responses.WebJSONResponse("success topup notification", nil))
 }
+
+func (th *topupHandler) GetByUserID(c echo.Context) error {
+	idToken := middlewares.ExtractTokenUserId(c)
+
+	results, err := th.topupService.GetByUserID(idToken)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, responses.WebJSONResponse("error read data: "+err.Error(), nil))
+	}
+
+	if len(results) == 0 {
+		return c.JSON(http.StatusOK, responses.WebJSONResponse("success get all topups", nil))
+	}
+
+	return c.JSON(http.StatusOK, responses.WebJSONResponse("success get all topups", toResponses(results)))
+}
