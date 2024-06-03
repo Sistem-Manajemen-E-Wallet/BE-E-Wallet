@@ -514,14 +514,7 @@
                         "application/json":{
                             "schema":{
                                 "$ref": "#/components/schemas/transaction"
-                            },
-                            "example":{
-                                "value":{                                        
-                                        "product_id": 12,
-                                        "quantity": 1,                                    
-                                        "additional": "gapake acar"                                       
-                                }
-                            }
+                            }                           
                         }
                     }
                 },                
@@ -586,21 +579,21 @@
                                     "example":{
                                         "value":[
                                             {
+                                                "order_id": 45,
                                                 "user_id": 5,
                                                 "product_id": 12,
                                                 "quantity": 1,
                                                 "total_cost": 10000,
                                                 "status_progress": "sudah diantar",
-                                                "additional": "gapake acar",
                                                 "status_payment": "success"    
                                             },
                                             {
+                                                "order_id": 11,
                                                 "user_id": 4,
                                                 "product_id": 11,
                                                 "quantity": 2,
-                                                "total_cost": 30000,
+                                                "total_cost": 30000,                                                
                                                 "status_progress": "sedang dimasak",
-                                                "additional": "tambah cabe",
                                                 "status_payment": "success"
                                             }   
                                         ]
@@ -1165,7 +1158,11 @@
             },
             "transaction":{
                 "type": "object",
-                "properties": {                    
+                "properties": {  
+                    "order_id": {
+                        "type": "integer",
+                        "example": 22
+                    },                  
                     "product_id": {
                         "type": "integer",
                         "example": 12
@@ -1181,10 +1178,36 @@
                 },
                 "required": ["product_id", "quantity"]
             },
+            "all_transaction_responses":{
+                "type": "object",
+                "properties": {
+                    "order_id":{
+                        "type": "integer"
+                    },
+                    "user_id":{
+                        "type": "integer"
+                    },
+                    "product_id":{
+                        "type": "integer"
+                    },
+                    "quantity": {
+                        "type": "integer"
+                    },
+                    "total_cost": {
+                        "type": "integer"
+                    },
+                    "status_progress": {
+                        "type": "string"
+                    },
+                    "status_payment": {
+                        "type": "string"
+                    }
+                }
+            },
             "all_transaction":{
                 "type": "array",
                 "items":{
-                    "$ref": "#/components/schemas/transaction"
+                    "$ref": "#/components/schemas/all_transaction_responses"
                 }
             },
             "history":{
