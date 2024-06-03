@@ -128,7 +128,19 @@ func (t *topupsService) Update(input topups.Core) error {
 	return nil
 }
 
-func (t *topupsService) GetByID(id int) (topups.Core, error) {
-	//TODO implement me
-	panic("implement me")
+func (t *topupsService) GetByID(id int, userID int) (topups.Core, error) {
+	if id <= 0 {
+		return topups.Core{}, errors.New("invalid topup id")
+	}
+
+	result, err := t.topupData.SelectById(id)
+	if err != nil {
+		return topups.Core{}, errors.New("topup not found")
+	}
+
+	if result.UserID != userID {
+		return topups.Core{}, errors.New("user not authorized")
+	}
+
+	return result, nil
 }

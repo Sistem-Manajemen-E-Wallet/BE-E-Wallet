@@ -6,6 +6,7 @@ import (
 	"e-wallet/utils/responses"
 	"github.com/labstack/echo/v4"
 	"net/http"
+	"strconv"
 )
 
 type topupHandler struct {
@@ -75,4 +76,22 @@ func (th *topupHandler) GetByUserID(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, responses.WebJSONResponse("success get all topups", toResponses(results)))
+}
+
+func (th *topupHandler) GetByID(c echo.Context) error {
+	idToken := middlewares.ExtractTokenUserId(c)
+
+	id := c.Param("id")
+	idInt, err := strconv.Atoi(id)
+	if err != nil {
+		return c.JSON(http.StatusUnprocessableEntity, responses.WebJSONResponse("error convert data: "+err.Error(), nil))
+	}
+
+	results, err := th.topupService.GetByID(idInt, idToken)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, responses.WebJSONResponse("error read data: "+err.Error(), nil))
+	}
+
+	return c.JSON(http.StatusOK, responses.WebJSONResponse("success get topup", toResponse(results)))
+
 }
