@@ -96,6 +96,10 @@ func (t *topupsService) Update(input topups.Core) error {
 		return errors.New("topup status cannot be updated")
 	}
 
+	if input.Status != "settlement" {
+		return errors.New("invalid topup status")
+	}
+
 	topup.Status = "paid"
 	tx := t.topupData.Update(int(topup.ID), topup)
 	if tx != nil {
