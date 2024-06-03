@@ -5,6 +5,7 @@ import (
 	"e-wallet/features/transaction"
 	"e-wallet/utils/responses"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/labstack/echo/v4"
@@ -39,9 +40,9 @@ func (th *transactionHandler) CreateTransaction(c echo.Context) error {
 	err := th.ts.Create(inputCore)
 	if err != nil {
 		if strings.Contains(err.Error(), "validation") {
-			return c.JSON(http.StatusBadRequest, responses.WebJSONResponse("error insert data: "+err.Error(), nil))
+			return c.JSON(http.StatusBadRequest, responses.WebJSONResponse("error create transaction: "+err.Error(), nil))
 		}
-		return c.JSON(http.StatusInternalServerError, responses.WebJSONResponse("error insert data: "+err.Error(), nil))
+		return c.JSON(http.StatusInternalServerError, responses.WebJSONResponse("error create transaction: "+err.Error(), nil))
 	}
 
 	return c.JSON(http.StatusCreated, responses.WebJSONResponse("success create transaction", nil))
@@ -62,4 +63,30 @@ func (th *transactionHandler) GetTransactionByMerchantId(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, responses.WebJSONResponse("success get all transactions", data))
+}
+
+func (th *transactionHandler) UpdateStatusProgress(c echo.Context) error {
+	idToken := middlewares.ExtractTokenUserId(c)
+	id := c.Param("id")
+	idConv, err := strconv.Atoi(id)
+	if err != nil {
+		return c.JSON(http.StatusUnprocessableEntity, responses.WebJSONResponse("error convert data: "+err.Error(), nil))
+	}
+
+	updateStatusProgress := StatusProgressRequest{}
+	errBind := c.Bind(&updateStatusProgress)
+	if errBind != nil {
+		return c.JSON(http.StatusBadRequest, responses.WebJSONResponse("error bind data: "+errBind.Error(), nil))
+	}
+
+	statusCore := transaction.Core{
+		StatusProgress: updateStatusProgress.StatusProgress,
+	}
+
+	err2 := th.ts.UpdateStatusProgress(uint(idToken), uint(idConv), statusCore)
+	if err2 != nil {
+		return c.JSON(http.StatusInternalServerError, responses.WebJSONResponse("error update data: "+err2.Error(), nil))
+	}
+
+	return c.JSON(http.StatusOK, responses.WebJSONResponse("success update status progress", nil))
 }

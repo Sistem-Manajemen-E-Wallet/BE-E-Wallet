@@ -48,7 +48,28 @@ func (t *TransactionQuery) Insert(input transaction.Core) error {
 
 // SelectTransactionById implements transaction.DataInterface.
 func (t *TransactionQuery) SelectTransactionById(id uint) (*transaction.Core, error) {
-	panic("unimplemented")
+	var currentTransaction Transaction
+	tx := t.db.First(&currentTransaction, id)
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+
+	currentCore := transaction.Core{
+		ID:             id,
+		UserID:         currentTransaction.UserID,
+		OrderID:        currentTransaction.OrderID,
+		ProductID:      currentTransaction.ProductID,
+		Quantity:       currentTransaction.Quantity,
+		TotalCost:      currentTransaction.TotalCost,
+		StatusProgress: currentTransaction.StatusProgress,
+		Additional:     currentTransaction.Additional,
+		StatusPayment:  currentTransaction.StatusPayment,
+		MerchantID:     currentTransaction.MerchantID,
+		CreatedAt:      currentTransaction.CreatedAt,
+		UpdatedAt:      currentTransaction.UpdatedAt,
+	}
+
+	return &currentCore, nil
 }
 
 // SelectTransactionByMerchantId implements transaction.DataInterface.
@@ -80,6 +101,14 @@ func (t *TransactionQuery) SelectTransactionByMerchantId(id uint) ([]transaction
 }
 
 // UpdateStatusProgress implements transaction.DataInterface.
-func (t *TransactionQuery) UpdateStatusProgress(input transaction.Core) error {
-	panic("unimplemented")
+func (t *TransactionQuery) UpdateStatusProgress(id uint, input transaction.Core) error {
+	updateStatus := Transaction{
+		StatusProgress: input.StatusProgress,
+	}
+	tx := t.db.Model(&Transaction{}).Where("id = ?", id).Updates(updateStatus)
+	if tx.Error != nil {
+		return tx.Error
+	}
+
+	return nil
 }

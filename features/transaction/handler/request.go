@@ -6,3 +6,7 @@ type CustomerRequest struct {
 	Quantity   int    `json:"quantity" form:"quantity"`
 	Additional string `json:"additional" form:"additional"`
 }
+
+type StatusProgressRequest struct {
+	StatusProgress string `json:"status_progress" form:"status_progress"`
+}
