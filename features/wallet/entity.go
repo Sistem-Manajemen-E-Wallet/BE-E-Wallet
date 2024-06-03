@@ -15,6 +15,7 @@ type DataInterface interface {
 	GetWalletById(id uint) (Core, error)
 	GetWalletByUserId(id uint) (Core, error)
 	UpdateBalanceMinus(id uint, amount int) error
+	UpdateBalancePlus(id uint, amount int) error
 	UpdateBalanceByTopup(input Core) error
 }
 

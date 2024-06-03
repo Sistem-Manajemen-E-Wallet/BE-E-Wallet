@@ -77,6 +77,26 @@ func (w *walletQuery) UpdateBalanceMinus(id uint, amount int) error {
 	return nil
 }
 
+// UpdateBalance implements wallet.DataInterface.
+func (w *walletQuery) UpdateBalancePlus(id uint, amount int) error {
+	result, err := w.GetWalletById(id)
+	if err != nil {
+		return err
+	}
+
+	summation := result.Balance + amount
+
+	tx := w.db.Model(&Wallet{}).Where("user_id = ?", id).Updates(map[string]interface{}{
+		"balance":    summation,
+		"updated_at": time.Now(),
+	})
+	if tx.Error != nil {
+		return tx.Error
+	}
+
+	return nil
+}
+
 func (w *walletQuery) UpdateBalanceByTopup(input wallet.Core) error {
 	walletGorm := Wallet{
 		UserID:  input.UserID,

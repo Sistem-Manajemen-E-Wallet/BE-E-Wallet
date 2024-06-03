@@ -3,16 +3,21 @@ package service
 import (
 	"e-wallet/features/product"
 	"e-wallet/features/transaction"
+	"e-wallet/features/wallet"
 	"errors"
 )
 
 type TransactionService struct {
 	transactionData transaction.DataInterface
+	walletData      wallet.DataInterface
+	productData     product.DataInterface
 }
 
-func New(td transaction.DataInterface, pd product.DataInterface) transaction.ServiceInterface {
+func New(td transaction.DataInterface, wd wallet.DataInterface, pd product.DataInterface) transaction.ServiceInterface {
 	return &TransactionService{
 		transactionData: td,
+		walletData:      wd,
+		productData:     pd,
 	}
 }
 
@@ -25,11 +30,22 @@ func (t *TransactionService) Create(input transaction.Core) error {
 		return errors.New("[validation] nomor meja/produk/quantity tidak boleh kosong")
 	}
 
-	err := t.transactionData.Insert(input)
+	result, err := t.walletData.GetWalletByUserId(input.UserID)
 	if err != nil {
 		return err
 	}
+	result2, err2 := t.productData.SelectProductById(input.ProductID)
+	if err2 != nil {
+		return err2
+	}
+	if result.Balance < result2.Price {
+		return errors.New("you don't have enough balance")
+	}
 
+	err3 := t.transactionData.Insert(input)
+	if err3 != nil {
+		return err3
+	}
 	return nil
 }
 
