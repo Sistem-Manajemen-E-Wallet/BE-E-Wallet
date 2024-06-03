@@ -1,6 +1,7 @@
 package service
 
 import (
+	"e-wallet/features/history"
 	"e-wallet/features/topups"
 	"e-wallet/features/user"
 	"e-wallet/features/wallet"
@@ -12,20 +13,22 @@ import (
 )
 
 type topupsService struct {
-	topupData  topups.DataInterface
-	userData   user.DataInterface
-	walletData wallet.DataInterface
-	validate   *validator.Validate
-	midtrans   midtranspay.Service
+	topupData   topups.DataInterface
+	userData    user.DataInterface
+	walletData  wallet.DataInterface
+	historyData history.DataInterface
+	validate    *validator.Validate
+	midtrans    midtranspay.Service
 }
 
-func New(data topups.DataInterface, walletData wallet.DataInterface, userData user.DataInterface) topups.ServiceInterface {
+func New(data topups.DataInterface, walletData wallet.DataInterface, userData user.DataInterface, historyData history.DataInterface) topups.ServiceInterface {
 	return &topupsService{
-		topupData:  data,
-		walletData: walletData,
-		userData:   userData,
-		validate:   validator.New(),
-		midtrans:   midtranspay.New(),
+		topupData:   data,
+		walletData:  walletData,
+		historyData: historyData,
+		userData:    userData,
+		validate:    validator.New(),
+		midtrans:    midtranspay.New(),
 	}
 }
 
@@ -74,6 +77,18 @@ func (t *topupsService) Create(input topups.Core) (topups.Core, error) {
 	}
 
 	result, err := t.topupData.Insert(topup)
+	if err != nil {
+		return topups.Core{}, err
+	}
+
+	history := history.Core{
+		UserID:  uint(input.UserID),
+		Amount:  int(input.Amount),
+		TopUpID: uint(result.ID),
+		Type:    "Top-Up",
+	}
+
+	err = t.historyData.InsertHistory(history)
 	if err != nil {
 		return topups.Core{}, err
 	}
