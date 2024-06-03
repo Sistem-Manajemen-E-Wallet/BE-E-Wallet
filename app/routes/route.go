@@ -65,7 +65,8 @@ func InitRouter(e *echo.Echo, db *gorm.DB) {
 	e.GET("/users/:id/products", productHandler.GetProductByUserID, middlewares.JWTMiddleware())
 	e.POST("/products/:id/images", productHandler.UpdateProductImages, middlewares.JWTMiddleware())
 
-	e.POST("/topups", topupHandler.CreateTopup)
+	e.POST("/topups", topupHandler.CreateTopup, middlewares.JWTMiddleware())
+	e.POST("/topups/notification", topupHandler.TopUpNotification)
 
 	e.POST("/transactions", transactionHandler.CreateTransaction, middlewares.JWTMiddleware())
 	e.GET("/transactions", transactionHandler.GetTransactionByMerchantId, middlewares.JWTMiddleware())

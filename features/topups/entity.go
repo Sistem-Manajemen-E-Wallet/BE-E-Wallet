@@ -20,11 +20,12 @@ type DataInterface interface {
 	SelectById(id int) (Core, error)
 	SelectByUserID(id int) ([]Core, error)
 	Update(id int, input Core) error
+	SelectByOrderID(id string) (Core, error)
 }
 
 type ServiceInterface interface {
 	Create(input Core) (Core, error)
 	GetByID(id int) (Core, error)
 	GetByUserID(id int) ([]Core, error)
-	Update(id int, input Core) error
+	Update(input Core) error
 }
