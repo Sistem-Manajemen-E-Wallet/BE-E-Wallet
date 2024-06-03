@@ -56,7 +56,7 @@ func (th *topupHandler) TopUpNotification(c echo.Context) error {
 
 	err := th.topupService.Update(inputCore)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, responses.WebJSONResponse("error topup notification: "+err.Error(), nil))
+		return c.JSON(http.StatusOK, responses.WebJSONResponse("error topup notification: "+err.Error(), nil))
 	}
 
 	return c.JSON(http.StatusOK, responses.WebJSONResponse("success topup notification", nil))
