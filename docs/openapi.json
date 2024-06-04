@@ -599,29 +599,39 @@
                         "content": {
                             "application/json":{
                                 "schema":{
-                                    "$ref": "#/components/schemas/all_transaction"
+                                    "$ref": "#/components/schemas/all_transaction_responses"
                                 },
                                 "examples": {
                                     "example":{
                                         "value":[
                                             {
-                                                "order_id": 45,
-                                                "user_id": 5,
-                                                "product_id": 12,
-                                                "quantity": 1,
-                                                "total_cost": 10000,
-                                                "status_progress": "sudah diantar",
-                                                "status_payment": "success"    
-                                            },
-                                            {
-                                                "order_id": 11,
-                                                "user_id": 4,
-                                                "product_id": 11,
-                                                "quantity": 2,
-                                                "total_cost": 30000,                                                
-                                                "status_progress": "sedang dimasak",
-                                                "status_payment": "success"
-                                            }   
+                                                "meta":{
+                                                    "limit": 10,
+                                                    "page": 2,
+                                                    "totalItems": 31,
+                                                    "totalPages": 4
+                                                },
+                                                "data":[
+                                                    {
+                                                        "order_id": 45,
+                                                        "user_id": 5,
+                                                        "product_id": 12,
+                                                        "quantity": 1,
+                                                        "total_cost": 10000,
+                                                        "status_progress": "sudah diantar",
+                                                        "status_payment": "success"    
+                                                    },
+                                                    {
+                                                        "order_id": 11,
+                                                        "user_id": 4,
+                                                        "product_id": 11,
+                                                        "quantity": 2,
+                                                        "total_cost": 30000,                                                
+                                                        "status_progress": "sedang dimasak",
+                                                        "status_payment": "success"
+                                                    }
+                                                ]
+                                            }                                            
                                         ]
                                     }
                                 }
@@ -1274,35 +1284,64 @@
             "all_transaction_responses":{
                 "type": "object",
                 "properties": {
-                    "order_id":{
-                        "type": "integer"
+                    "message":{
+                        "type": "string",
+                        "description": "success get all transaction"
                     },
-                    "user_id":{
-                        "type": "integer"
+                    "meta":{
+                        "type": "object",
+                        "description": "Pagination metadata",
+                        "properties": {
+                            "limit": {
+                                "type": "integer",
+                                "description": "Number of transactions per page (default: 10, maximum: 100)"
+                            },
+                            "page": {
+                                "type": "integer",
+                                "description": "Current page number (default: 1)"
+                            },
+                            "totalItems": {
+                                "type": "integer",
+                                "description": "Total number of transactions"
+                            },
+                            "totalPages": {
+                                "type": "integer",
+                                "description": "Total number of pages"
+                            }
+                        }
                     },
-                    "product_id":{
-                        "type": "integer"
-                    },
-                    "quantity": {
-                        "type": "integer"
-                    },
-                    "total_cost": {
-                        "type": "integer"
-                    },
-                    "status_progress": {
-                        "type": "string"
-                    },
-                    "status_payment": {
-                        "type": "string"
+                    "data":{
+                        "type": "array",
+                        "description": "Array of transaction objects",
+                        "items": {
+                        "type": "object",
+                        "properties":{
+                            "order_id":{
+                                "type": "integer"
+                            },
+                            "user_id":{
+                                "type": "integer"
+                            },
+                            "product_id":{
+                                "type": "integer"
+                            },
+                            "quantity": {
+                                "type": "integer"
+                            },
+                            "total_cost": {
+                                "type": "integer"
+                            },
+                            "status_progress": {
+                                "type": "string"
+                            },
+                            "status_payment": {
+                                "type": "string"
+                            }
+                        }
                     }
                 }
-            },
-            "all_transaction":{
-                "type": "array",
-                "items":{
-                    "$ref": "#/components/schemas/all_transaction_responses"
-                }
-            },
+            }
+        },
             "history":{
                 "type": "object",
                 "properties": {
