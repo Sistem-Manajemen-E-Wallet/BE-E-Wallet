@@ -22,14 +22,19 @@ func New(data product.DataInterface, userData user.DataInterface) product.Servic
 	}
 }
 
-func (p *productService) GetAllProduct() ([]product.Core, error) {
+func (p *productService) GetAllProduct(offset, limit int) ([]product.Core, int, error) {
 
-	result, err := p.productData.SelectAllProduct()
+	result, err := p.productData.SelectAllProduct(offset, limit)
 	if err != nil {
-		return nil, errors.New("product not found")
+		return nil, 0, errors.New("product not found")
 	}
 
-	return result, nil
+	totalProduct, err := p.productData.CountProduct()
+	if err != nil {
+		return nil, 0, errors.New("product not found")
+	}
+
+	return result, totalProduct, nil
 }
 
 func (p *productService) Create(input product.Core) error {

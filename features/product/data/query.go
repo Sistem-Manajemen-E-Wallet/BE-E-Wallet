@@ -16,9 +16,9 @@ func New(db *gorm.DB) product.DataInterface {
 	}
 }
 
-func (p *productQuery) SelectAllProduct() ([]product.Core, error) {
+func (p *productQuery) SelectAllProduct(offset, limit int) ([]product.Core, error) {
 	var productGorm []Product
-	tx := p.db.Find(&productGorm)
+	tx := p.db.Offset(offset).Limit(limit).Find(&productGorm)
 	if tx.Error != nil {
 		return nil, tx.Error
 	}
@@ -116,4 +116,19 @@ func (p *productQuery) Delete(id uint) error {
 		return tx.Error
 	}
 	return nil
+}
+
+func (p *productQuery) CountProductByUserId(id uint) (int, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (p *productQuery) CountProduct() (int, error) {
+	// count product
+	var count int64
+	tx := p.db.Model(&Product{}).Count(&count)
+	if tx.Error != nil {
+		return 0, tx.Error
+	}
+	return int(count), nil
 }
