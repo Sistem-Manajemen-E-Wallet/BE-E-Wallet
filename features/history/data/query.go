@@ -46,6 +46,7 @@ func (h *HistoryQuery) SelectAllHistory(idUser uint) ([]history.Core, error) {
 	var historyCore []history.Core
 	for _, v := range historyGorm {
 		historyCore = append(historyCore, history.Core{
+			ID:            v.ID,
 			UserID:        idUser,
 			TransactionID: v.TransactionID,
 			TopUpID:       v.TopUpID,
