@@ -18,6 +18,7 @@ type Core struct {
 type DataInterface interface {
 	InsertHistory(input Core) error
 	SelectAllHistory(idUser uint) ([]Core, error)
+	UpdateHistoryTopUp(input Core) error
 }
 
 type ServiceInterface interface {

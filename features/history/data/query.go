@@ -60,3 +60,14 @@ func (h *HistoryQuery) SelectAllHistory(idUser uint) ([]history.Core, error) {
 
 	return historyCore, nil
 }
+
+func (h *HistoryQuery) UpdateHistoryTopUp(input history.Core) error {
+	historyGorm := History{
+		Status: input.Status,
+	}
+	tx := h.db.Model(&History{}).Where("top_up_id = ?", input.TopUpID).Updates(&historyGorm)
+	if tx.Error != nil {
+		return tx.Error
+	}
+	return nil
+}

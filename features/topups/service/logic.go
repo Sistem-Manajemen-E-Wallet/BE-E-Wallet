@@ -83,9 +83,11 @@ func (t *topupsService) Create(input topups.Core) (topups.Core, error) {
 
 	history := history.Core{
 		UserID:  uint(input.UserID),
+		TrxName: "Bank " + strings.ToUpper(input.ChannelBank),
 		Amount:  int(input.Amount),
 		TopUpID: uint(result.ID),
 		Type:    "Top-Up",
+		Status:  "pending",
 	}
 
 	err = t.historyData.InsertHistory(history)
@@ -138,6 +140,16 @@ func (t *topupsService) Update(input topups.Core) error {
 	tx = t.walletData.UpdateBalanceByTopup(wallet)
 	if tx != nil {
 		return errors.New("error updating wallet")
+	}
+
+	history := history.Core{
+		TopUpID: uint(topup.ID),
+		Status:  "paid",
+	}
+
+	tx = t.historyData.UpdateHistoryTopUp(history)
+	if tx != nil {
+		return errors.New("error updating history")
 	}
 
 	return nil
