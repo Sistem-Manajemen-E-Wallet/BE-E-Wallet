@@ -76,24 +76,30 @@ func (p *productService) GetProductById(id uint) (*product.Core, error) {
 	return result, nil
 }
 
-func (p *productService) GetProductByUserId(id uint) ([]product.Core, error) {
+func (p *productService) GetProductByUserId(id uint, offset, limit int) ([]product.Core, int, error) {
 	if id <= 0 {
-		return nil, errors.New("id not valid")
+		return nil, 0, errors.New("id not valid")
 	}
 
 	userData, err := p.userData.SelectProfileById(uint(id))
 	if err != nil {
-		return nil, errors.New("user not found")
+		return nil, 0, errors.New("user not found")
 	}
 	if userData.Role != "Merchant" {
-		return nil, errors.New("this not a merchant")
+		return nil, 0, errors.New("this not a merchant")
 	}
 
-	result, err := p.productData.SelectProductByUserId(id)
+	result, err := p.productData.SelectProductByUserId(id, offset, limit)
 	if err != nil {
-		return nil, errors.New("product not found")
+		return nil, 0, errors.New("product not found")
 	}
-	return result, nil
+
+	totalProduct, err := p.productData.CountProductByUserId(id)
+	if err != nil {
+		return nil, 0, errors.New("product not found")
+	}
+
+	return result, totalProduct, nil
 }
 
 func (p *productService) Update(id uint, input product.Core) error {
