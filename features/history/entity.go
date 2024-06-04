@@ -17,10 +17,11 @@ type Core struct {
 
 type DataInterface interface {
 	InsertHistory(input Core) error
-	SelectAllHistory(idUser uint) ([]Core, error)
+	SelectAllHistory(idUser uint, offset int, limit int) ([]Core, error)
 	UpdateHistoryTopUp(input Core) error
+	CountHistory(idUser uint) (int, error)
 }
 
 type ServiceInterface interface {
-	GetAllHistory(idUser uint) ([]Core, error)
+	GetAllHistory(idUser uint, offset int, limit int) ([]Core, int, error)
 }

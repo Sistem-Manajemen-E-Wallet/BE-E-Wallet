@@ -36,9 +36,9 @@ func (h *HistoryQuery) InsertHistory(input history.Core) error {
 }
 
 // SelectAllHistory implements history.DataInterface.
-func (h *HistoryQuery) SelectAllHistory(idUser uint) ([]history.Core, error) {
+func (h *HistoryQuery) SelectAllHistory(idUser uint, offset, limit int) ([]history.Core, error) {
 	var historyGorm []History
-	tx := h.db.Model(&History{}).Where("user_id = ?", idUser).Find(&historyGorm)
+	tx := h.db.Model(&History{}).Where("user_id = ?", idUser).Offset(offset).Limit(limit).Find(&historyGorm)
 	if tx.Error != nil {
 		return nil, tx.Error
 	}
@@ -71,4 +71,13 @@ func (h *HistoryQuery) UpdateHistoryTopUp(input history.Core) error {
 		return tx.Error
 	}
 	return nil
+}
+
+func (h *HistoryQuery) CountHistory(idUser uint) (int, error) {
+	var count int64
+	tx := h.db.Model(&History{}).Where("user_id = ?", idUser).Count(&count)
+	if tx.Error != nil {
+		return 0, tx.Error
+	}
+	return int(count), nil
 }
