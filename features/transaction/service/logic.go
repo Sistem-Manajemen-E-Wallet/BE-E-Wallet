@@ -26,7 +26,7 @@ func (t *TransactionService) Create(input transaction.Core) error {
 	if input.UserID == 0 {
 		return errors.New("[validation] you must login first")
 	}
-	if input.UserID == 0 || input.OrderID == 0 || input.ProductID == 0 || input.Quantity == 0 {
+	if input.OrderID == 0 || input.ProductID == 0 || input.Quantity == 0 {
 		return errors.New("[validation] nomor meja/produk/quantity tidak boleh kosong")
 	}
 
