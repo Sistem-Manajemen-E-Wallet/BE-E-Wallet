@@ -72,9 +72,9 @@ func (p *productQuery) SelectProductById(id uint) (*product.Core, error) {
 	}, nil
 }
 
-func (p *productQuery) SelectProductByUserId(id uint) ([]product.Core, error) {
+func (p *productQuery) SelectProductByUserId(id uint, offset, limit int) ([]product.Core, error) {
 	var productGorm []Product
-	tx := p.db.Where("user_id = ?", id).Find(&productGorm)
+	tx := p.db.Where("user_id = ?", id).Offset(offset).Limit(limit).Find(&productGorm)
 	if tx.Error != nil {
 		return nil, tx.Error
 	}
@@ -119,8 +119,12 @@ func (p *productQuery) Delete(id uint) error {
 }
 
 func (p *productQuery) CountProductByUserId(id uint) (int, error) {
-	//TODO implement me
-	panic("implement me")
+	var count int64
+	tx := p.db.Model(&Product{}).Where("user_id = ?", id).Count(&count)
+	if tx.Error != nil {
+		return 0, tx.Error
+	}
+	return int(count), nil
 }
 
 func (p *productQuery) CountProduct() (int, error) {

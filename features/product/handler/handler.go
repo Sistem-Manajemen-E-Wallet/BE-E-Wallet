@@ -186,15 +186,35 @@ func (ph *productHandler) GetProductByUserID(c echo.Context) error {
 		return c.JSON(http.StatusUnprocessableEntity, responses.WebJSONResponse("error convert data: "+err.Error(), nil))
 	}
 
-	results, err := ph.productService.GetProductByUserId(uint(idUser))
+	page, err := strconv.Atoi(c.QueryParam("page"))
+	if err != nil || page < 1 {
+		page = 1
+	}
+
+	limit, err := strconv.Atoi(c.QueryParam("limit"))
+	if err != nil || limit < 1 {
+		limit = 10
+	}
+
+	offset := (page - 1) * limit
+
+	results, totalProducts, err := ph.productService.GetProductByUserId(uint(idUser), offset, limit)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, responses.WebJSONResponse("error read data: "+err.Error(), nil))
 	}
 
 	if len(results) == 0 {
-		return c.JSON(http.StatusOK, responses.WebJSONResponse("success get all products", nil))
+		return c.JSON(http.StatusOK, responses.WebJSONResponse("success get all products", "there are no products"))
+	}
+
+	response := map[string]interface{}{
+		"page":        page,
+		"limit":       limit,
+		"total_items": totalProducts,
+		"total_pages": (totalProducts + limit - 1) / limit,
 	}
 
 	data := toCoreList(results)
-	return c.JSON(http.StatusOK, responses.WebJSONResponse("success get all products", data))
+
+	return c.JSON(http.StatusOK, responses.WebJSONResponseMeta("success get all products", response, data))
 }
