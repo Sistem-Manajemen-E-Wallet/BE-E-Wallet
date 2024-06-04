@@ -567,6 +567,32 @@
                 "tags": ["transactions"],
                 "summary": "get all transaction by merchant",
                 "description": "get all transaction from customer to see by merchant",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "minimum": 1,
+                            "default": 1
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Number of items per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "minimum": 1,
+                            "default": 10
+                        }
+                    }
+                ],
                 "responses": {
                     "200":{
                         "description": "success get all transaction",

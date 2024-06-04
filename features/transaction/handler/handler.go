@@ -51,18 +51,37 @@ func (th *transactionHandler) CreateTransaction(c echo.Context) error {
 func (th *transactionHandler) GetTransactionByMerchantId(c echo.Context) error {
 	idToken := middlewares.ExtractTokenUserId(c)
 
-	result, err := th.ts.GetTransactionByMerchantId(uint(idToken))
+	page, err := strconv.Atoi(c.QueryParam("page"))
+	if err != nil || page < 1 {
+		page = 1
+	}
+
+	limit, err := strconv.Atoi(c.QueryParam("limit"))
+	if err != nil || limit < 1 {
+		limit = 10
+	}
+
+	offset := (page - 1) * limit
+
+	result, totalTransactions, err := th.ts.GetTransactionByMerchantId(uint(idToken), offset, limit)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, responses.WebJSONResponse("error read data: "+err.Error(), nil))
+	}
+	if len(result) == 0 {
+		return c.JSON(http.StatusOK, responses.WebJSONResponse("you don't have any transactions", nil))
 	}
 
 	data := toCoreList(result)
 
-	if len(result) == 0 {
-		return c.JSON(http.StatusOK, responses.WebJSONResponse("success get all transactions", nil))
+	response := map[string]interface{}{
+		"page":       page,
+		"limit":      limit,
+		"totalItems": totalTransactions,
+		"totalPages": (totalTransactions + limit - 1) / limit,
+		"data":       data,
 	}
 
-	return c.JSON(http.StatusOK, responses.WebJSONResponse("success get all transactions", data))
+	return c.JSON(http.StatusOK, responses.WebJSONResponse("success get all transactions", response))
 }
 
 func (th *transactionHandler) UpdateStatusProgress(c echo.Context) error {

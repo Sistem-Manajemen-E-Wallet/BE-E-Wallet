@@ -55,13 +55,17 @@ func (t *TransactionService) GetTransactionById(id uint) (*transaction.Core, err
 }
 
 // GetTransactionByMerchantId implements transaction.ServiceInterface.
-func (t *TransactionService) GetTransactionByMerchantId(id uint) ([]transaction.Core, error) {
-	result, err := t.transactionData.SelectTransactionByMerchantId(id)
+func (t *TransactionService) GetTransactionByMerchantId(id uint, offset int, limit int) ([]transaction.Core, int, error) {
+	result, err := t.transactionData.SelectTransactionByMerchantId(id, offset, limit)
 	if err != nil {
-		return nil, errors.New("product not found")
+		return nil, 0, errors.New("product not found")
+	}
+	result2, err2 := t.transactionData.CountByMerchantId(id)
+	if err2 != nil {
+		return nil, 0, err2
 	}
 
-	return result, nil
+	return result, result2, nil
 }
 
 // UpdateStatusProgress implements transaction.ServiceInterface.

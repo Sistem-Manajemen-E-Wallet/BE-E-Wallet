@@ -104,9 +104,9 @@ func (t *TransactionQuery) SelectTransactionById(id uint) (*transaction.Core, er
 }
 
 // SelectTransactionByMerchantId implements transaction.DataInterface.
-func (t *TransactionQuery) SelectTransactionByMerchantId(id uint) ([]transaction.Core, error) {
+func (t *TransactionQuery) SelectTransactionByMerchantId(id uint, offset int, limit int) ([]transaction.Core, error) {
 	var transactionGorm []Transaction
-	tx := t.db.Where("merchant_id = ?", id).Find(&transactionGorm)
+	tx := t.db.Where("merchant_id = ?", id).Offset(offset).Limit(limit).Find(&transactionGorm)
 	if tx.Error != nil {
 		return nil, tx.Error
 	}
@@ -142,4 +142,14 @@ func (t *TransactionQuery) UpdateStatusProgress(id uint, input transaction.Core)
 	}
 
 	return nil
+}
+
+// CountByMerchantId implements transaction.DataInterface.
+func (t *TransactionQuery) CountByMerchantId(merchantId uint) (int, error) {
+	var count int64
+	tx := t.db.Model(&Transaction{}).Where("merchant_id = ?", merchantId).Count(&count)
+	if tx.Error != nil {
+		return 0, tx.Error
+	}
+	return int(count), nil
 }

@@ -20,14 +20,15 @@ type Core struct {
 type DataInterface interface {
 	Insert(input Core) error
 	SelectTransactionById(id uint) (*Core, error)
-	SelectTransactionByMerchantId(id uint) ([]Core, error)
+	SelectTransactionByMerchantId(id uint, offset int, limit int) ([]Core, error)
 	UpdateStatusProgress(id uint, input Core) error
+	CountByMerchantId(merchantId uint) (int, error)
 	// SelectTransactionByUserId(id uint) ([]Core, error)
 }
 
 type ServiceInterface interface {
 	Create(input Core) error
 	GetTransactionById(id uint) (*Core, error)
-	GetTransactionByMerchantId(id uint) ([]Core, error)
+	GetTransactionByMerchantId(id uint, offset int, limit int) ([]Core, int, error)
 	UpdateStatusProgress(idUser uint, id uint, input Core) error
 }
