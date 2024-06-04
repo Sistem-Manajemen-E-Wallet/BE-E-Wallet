@@ -78,10 +78,9 @@ func (th *transactionHandler) GetTransactionByMerchantId(c echo.Context) error {
 		"limit":      limit,
 		"totalItems": totalTransactions,
 		"totalPages": (totalTransactions + limit - 1) / limit,
-		"data":       data,
 	}
 
-	return c.JSON(http.StatusOK, responses.WebJSONResponse("success get all transactions", response))
+	return c.JSON(http.StatusOK, responses.WebJSONResponseMeta("success get all transactions", response, data))
 }
 
 func (th *transactionHandler) UpdateStatusProgress(c echo.Context) error {
