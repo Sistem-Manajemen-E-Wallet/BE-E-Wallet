@@ -45,7 +45,7 @@ func InitRouter(e *echo.Echo, db *gorm.DB) {
 	historyService := historyService.New(dataHistory)
 	historyHandler := historyHandler.New(historyService)
 
-	dataTransaction := transactionData.New(db, dataProduct, dataHistory, walletDataService)
+	dataTransaction := transactionData.New(db, dataProduct, dataHistory, walletDataService, userDataService, hashService)
 	transactionService := transactionService.New(dataTransaction, walletDataService, dataProduct)
 	transactionHandler := transactionHandler.New(transactionService)
 
@@ -79,6 +79,7 @@ func InitRouter(e *echo.Echo, db *gorm.DB) {
 
 	e.POST("/transactions", transactionHandler.CreateTransaction, middlewares.JWTMiddleware())
 	e.GET("/transactions", transactionHandler.GetTransactionByMerchantId, middlewares.JWTMiddleware())
+	e.POST("/transactions/verify", transactionHandler.VerifyPin, middlewares.JWTMiddleware())
 	e.GET("/transactions/:id", transactionHandler.GetTransactionById, middlewares.JWTMiddleware())
 	e.PUT("/transactions/:id", transactionHandler.UpdateStatusProgress, middlewares.JWTMiddleware())
 

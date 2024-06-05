@@ -5,6 +5,7 @@ import "time"
 type Core struct {
 	ID             uint
 	UserID         uint
+	Pin            string
 	OrderID        int
 	ProductID      uint
 	Quantity       int
@@ -23,6 +24,7 @@ type DataInterface interface {
 	SelectTransactionByMerchantId(id uint, offset int, limit int) ([]Core, error)
 	UpdateStatusProgress(id uint, input Core) error
 	CountByMerchantId(merchantId uint) (int, error)
+	VerifyPin(pin string, idUser uint) error
 	// SelectTransactionByUserId(id uint) ([]Core, error)
 }
 
@@ -31,4 +33,5 @@ type ServiceInterface interface {
 	GetTransactionById(userId uint, id uint) (*Core, error)
 	GetTransactionByMerchantId(id uint, offset int, limit int) ([]Core, int, error)
 	UpdateStatusProgress(idUser uint, id uint, input Core) error
+	VerifyPin(pin string, idUser uint) error
 }

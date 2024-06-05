@@ -124,3 +124,24 @@ func (th *transactionHandler) UpdateStatusProgress(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, responses.WebJSONResponse("success update status progress", nil))
 }
+
+func (th *transactionHandler) VerifyPin(c echo.Context) error {
+	idToken := middlewares.ExtractTokenUserId(c)
+	pinUser := VerifyRequest{}
+	errBind := c.Bind(&pinUser)
+	if errBind != nil {
+		return c.JSON(http.StatusBadRequest, responses.WebJSONResponse("error bind data: "+errBind.Error(), nil))
+	}
+
+	input := transaction.Core{
+		UserID: uint(idToken),
+		Pin:    pinUser.Pin,
+	}
+
+	err := th.ts.VerifyPin(input.Pin, input.UserID)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, responses.WebJSONResponse("error verify data: "+err.Error(), nil))
+	}
+
+	return c.JSON(http.StatusOK, responses.WebJSONResponse("verify successful", nil))
+}

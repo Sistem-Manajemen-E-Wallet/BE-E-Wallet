@@ -10,3 +10,7 @@ type CustomerRequest struct {
 type StatusProgressRequest struct {
 	StatusProgress string `json:"status_progress" form:"status_progress"`
 }
+
+type VerifyRequest struct {
+	Pin string `json:"pin" form:"pin"`
+}

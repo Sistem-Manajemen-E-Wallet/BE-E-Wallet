@@ -716,6 +716,67 @@
                 }                
             }
         },
+        "/transactions/verify":{
+            "post":{
+                "security": [
+                    {
+                        "JWTAuth":[]
+                    }
+                ],
+                "tags": ["transactions"],
+                "summary": "get current transaction by id",
+                "description": "get current transaction to see details",
+                "requestBody":{
+                    "required": true,
+                    "content": {
+                        "application/json":{
+                            "schema":{
+                                "$ref": "#/components/schemas/verify"
+                            }                           
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "success create transaction",
+                        "content":{
+                            "application/json":{
+                                "schema":{
+                                    "$ref": "#/components/responses/200"
+                                },
+                                "examples":{
+                                    "successful_verify":{
+                                        "value":{
+                                            "message":"success verify"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400":{
+                        "description": "wrong input",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "$ref": "#/components/responses/400"
+                                },
+                                "examples":{
+                                    "failed_update":{
+                                        "value":{
+                                            "message":"wrong pin"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500":{
+                        "$ref": "#/components/responses/500"
+                    }
+                }    
+            }
+        },
         "/transactions/{id}":{
             "get":{
                 "security": [
@@ -1517,6 +1578,19 @@
                             }
                         }
                     }
+                }
+            }
+        },
+        "verify":{
+            "type": "object",
+            "properties": {
+                "user_id":{
+                    "type": "integer",
+                    "example": 1
+                },
+                "pin":{
+                    "type": "string",
+                    "example":"123456"
                 }
             }
         },
