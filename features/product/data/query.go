@@ -2,17 +2,20 @@ package data
 
 import (
 	"e-wallet/features/product"
+	"e-wallet/features/user"
 
 	"gorm.io/gorm"
 )
 
 type productQuery struct {
-	db *gorm.DB
+	db       *gorm.DB
+	userData user.DataInterface
 }
 
-func New(db *gorm.DB) product.DataInterface {
+func New(db *gorm.DB, ud user.DataInterface) product.DataInterface {
 	return &productQuery{
-		db: db,
+		db:       db,
+		userData: ud,
 	}
 }
 
@@ -60,9 +63,16 @@ func (p *productQuery) SelectProductById(id uint) (*product.Core, error) {
 	if tx.Error != nil {
 		return nil, tx.Error
 	}
+
+	result, err := p.userData.SelectProfileById(productGorm.UserID)
+	if err != nil {
+		return nil, err
+	}
+
 	return &product.Core{
 		ID:            productGorm.ID,
 		UserID:        productGorm.UserID,
+		MerchantName:  result.Name,
 		ProductName:   productGorm.ProductName,
 		Description:   productGorm.Description,
 		Price:         productGorm.Price,

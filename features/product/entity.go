@@ -5,6 +5,7 @@ import "time"
 type Core struct {
 	ID            uint
 	UserID        uint
+	MerchantName  string
 	ProductName   string `validate:"required"`
 	Description   string `validate:"required"`
 	Price         int    `validate:"required"`

@@ -8,6 +8,7 @@ import (
 type GetAllProductResponse struct {
 	ID            uint      `json:"id"`
 	UserID        uint      `json:"user_id"`
+	MerchantName  string    `json:"merchant_name"`
 	ProductName   string    `json:"product_name"`
 	Description   string    `json:"description"`
 	Price         int       `json:"price"`
@@ -20,6 +21,7 @@ func toResponse(product product.Core) GetAllProductResponse {
 	return GetAllProductResponse{
 		ID:            uint(product.ID),
 		UserID:        uint(product.UserID),
+		MerchantName:  product.MerchantName,
 		ProductName:   product.ProductName,
 		Description:   product.Description,
 		Price:         product.Price,
