@@ -82,6 +82,22 @@ func (th *transactionHandler) GetTransactionByMerchantId(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, responses.WebJSONResponseMeta("success get all transactions", response, data))
 }
+func (th *transactionHandler) GetTransactionById(c echo.Context) error {
+	idToken := middlewares.ExtractTokenUserId(c)
+	id := c.Param("id")
+	idConv, err := strconv.Atoi(id)
+	if err != nil {
+		return c.JSON(http.StatusUnprocessableEntity, responses.WebJSONResponse("error convert data: "+err.Error(), nil))
+	}
+
+	result, err := th.ts.GetTransactionById(uint(idToken), uint(idConv))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, responses.WebJSONResponse("error get data: "+err.Error(), nil))
+	}
+
+	response := toResponse(*result)
+	return c.JSON(http.StatusOK, responses.WebJSONResponse("success get transactions", response))
+}
 
 func (th *transactionHandler) UpdateStatusProgress(c echo.Context) error {
 	idToken := middlewares.ExtractTokenUserId(c)

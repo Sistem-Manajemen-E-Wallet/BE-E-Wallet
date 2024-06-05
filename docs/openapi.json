@@ -715,6 +715,56 @@
                 }                
             }
         },
+        "/transactions/{id}":{
+            "get":{
+                "security": [
+                    {
+                        "JWTAuth":[]
+                    }
+                ],
+                "tags": ["transactions"],
+                "summary": "get current transaction by id",
+                "description": "get current transaction to see details",
+                "parameters": [
+                   {
+                    "$ref": "#/components/parameters/id"
+                   }
+                ],
+                "responses": {
+                    "200":{
+                        "description": "success get transaction",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "$ref": "#/components/schemas/transaction"
+                                },
+                                "examples": {
+                                    "example":{
+                                        "value":[
+                                            {                                                                                            
+                                                "order_id": 45,
+                                                "user_id": 5,
+                                                "product_id": 12,
+                                                "quantity": 1,
+                                                "total_cost": 10000,
+                                                "status_progress": "sudah diantar",
+                                                "status_payment": "success"                                                                                                                                                            
+                                            }                                            
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404":{
+                        "$ref": "#/components/responses/404"
+                    },
+                    "500":{
+                        "$ref": "#/components/responses/500"
+                    }
+                }
+            }
+        },
         "/products": {
             "get": {
                 "security": [
@@ -1288,11 +1338,11 @@
 
         },
         "parameters": {
-            "id_homestay": {              
+            "id": {              
                 "name": "id",
                 "in": "path",
                 "required": true,
-                "description": "id homestay to get data",
+                "description": "id to get data",
                     "schema": {
                         "type": "integer",
                         "example":1
@@ -1371,7 +1421,7 @@
                         "example": "gapake acar"
                     }
                 },
-                "required": ["product_id", "quantity"]
+                "required": ["order_id", "product_id", "user_id", "quantity"]
             },
             "all_transaction_responses":{
                 "type": "object",
