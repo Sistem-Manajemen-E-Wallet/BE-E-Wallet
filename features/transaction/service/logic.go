@@ -88,3 +88,11 @@ func (t *TransactionService) UpdateStatusProgress(idUser uint, id uint, input tr
 
 	return t.transactionData.UpdateStatusProgress(id, input)
 }
+
+// VerifyPin implements transaction.ServiceInterface.
+func (t *TransactionService) VerifyPin(pin string, idUser uint) error {
+	if idUser == 0 {
+		return errors.New("you must login first")
+	}
+	return t.transactionData.VerifyPin(pin, idUser)
+}

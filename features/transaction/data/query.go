@@ -4,7 +4,10 @@ import (
 	"e-wallet/features/history"
 	"e-wallet/features/product"
 	"e-wallet/features/transaction"
+	"e-wallet/features/user"
 	"e-wallet/features/wallet"
+	encrypts "e-wallet/utils"
+	"errors"
 
 	"gorm.io/gorm"
 )
@@ -14,14 +17,18 @@ type TransactionQuery struct {
 	pd product.DataInterface
 	hd history.DataInterface
 	wd wallet.DataInterface
+	ud user.DataInterface
+	eh encrypts.HashInterface
 }
 
-func New(db *gorm.DB, pd product.DataInterface, hd history.DataInterface, wd wallet.DataInterface) transaction.DataInterface {
+func New(db *gorm.DB, pd product.DataInterface, hd history.DataInterface, wd wallet.DataInterface, ud user.DataInterface, eh encrypts.HashInterface) transaction.DataInterface {
 	return &TransactionQuery{
 		db: db,
 		pd: pd,
 		hd: hd,
 		wd: wd,
+		ud: ud,
+		eh: eh,
 	}
 }
 
@@ -152,4 +159,19 @@ func (t *TransactionQuery) CountByMerchantId(merchantId uint) (int, error) {
 		return 0, tx.Error
 	}
 	return int(count), nil
+}
+
+// VerifyPin implements transaction.DataInterface.
+func (t *TransactionQuery) VerifyPin(pin string, idUser uint) error {
+	result, err := t.ud.SelectProfileById(idUser)
+	if err != nil {
+		return err
+	}
+
+	isVerifyValid := t.eh.CheckPasswordHash(result.Pin, pin)
+	if !isVerifyValid {
+		return errors.New("pin tidak sesuai")
+	}
+
+	return nil
 }
