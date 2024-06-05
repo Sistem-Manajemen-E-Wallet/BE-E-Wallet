@@ -175,6 +175,7 @@ func (uh *UserHandler) Login(c echo.Context) error {
 	var resultResponse = map[string]any{
 		"id":    login.ID,
 		"name":  login.Name,
+		"role":  login.Role,
 		"token": token,
 	}
 
