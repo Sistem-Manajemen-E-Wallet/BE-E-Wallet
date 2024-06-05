@@ -57,8 +57,8 @@ func TestCreate(t *testing.T) {
 		}
 
 		hashedPin := "hashed_password"
-		hashMock.On("HashPassword", input.Pin).Return(hashedPin, nil)
-		repoUserMock.On("Insert", mock.Anything).Return(nil)
+		hashMock.On("HashPassword", input.Pin).Return(hashedPin, nil).Once()
+		repoUserMock.On("Insert", mock.Anything).Return(nil).Once()
 
 		srv := New(repoUserMock, hashMock)
 
@@ -103,7 +103,7 @@ func TestCreate(t *testing.T) {
 			Phone:      "11111",
 		}
 
-		hashMock.On("HashPassword", input.Pin).Return("", errors.New("hash error"))
+		hashMock.On("HashPassword", input.Pin).Return("", errors.New("hash error")).Once()
 
 		srv := New(repoUserMock, hashMock)
 		err := srv.Create(input)
@@ -123,8 +123,8 @@ func TestCreate(t *testing.T) {
 		}
 
 		hashedPin := "hashed_password"
-		hashMock.On("HashPassword", input.Pin).Return(hashedPin, nil)
-		repoUserMock.On("Insert", mock.Anything).Return(errors.New("insert error"))
+		hashMock.On("HashPassword", input.Pin).Return(hashedPin, nil).Once()
+		repoUserMock.On("Insert", mock.Anything).Return(errors.New("insert error")).Once()
 
 		srv := New(repoUserMock, hashMock)
 		err := srv.Create(input)
