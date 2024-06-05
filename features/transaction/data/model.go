@@ -1,7 +1,6 @@
 package data
 
 import (
-	productData "e-wallet/features/product/data"
 	userData "e-wallet/features/user/data"
 
 	"gorm.io/gorm"
@@ -18,6 +17,5 @@ type Transaction struct {
 	StatusProgress string
 	Additional     string
 	StatusPayment  string
-	User           userData.User       `gorm:"foreignKey:UserID"`
-	Product        productData.Product `gorm:"foreignKey:ProductID"`
+	User           userData.User `gorm:"foreignKey:UserID"`
 }
