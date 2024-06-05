@@ -66,6 +66,7 @@
                                         "value":{
                                             "id": 1,
                                             "name":"user123",
+                                            "role":"customer",
                                             "token":"agaTwefhwoefh12314"
                                         }
                                     }
@@ -1389,6 +1390,9 @@
                         "type": "string"
                     },
                     "name": {
+                        "type": "string"
+                    },
+                    "role":{
                         "type": "string"
                     },
                     "token": {
