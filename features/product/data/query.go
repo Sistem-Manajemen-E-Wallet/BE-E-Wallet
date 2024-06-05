@@ -2,20 +2,16 @@ package data
 
 import (
 	"e-wallet/features/product"
-	"e-wallet/features/user"
-
 	"gorm.io/gorm"
 )
 
 type productQuery struct {
-	db       *gorm.DB
-	userData user.DataInterface
+	db *gorm.DB
 }
 
-func New(db *gorm.DB, ud user.DataInterface) product.DataInterface {
+func New(db *gorm.DB) product.DataInterface {
 	return &productQuery{
-		db:       db,
-		userData: ud,
+		db: db,
 	}
 }
 
@@ -59,20 +55,15 @@ func (p *productQuery) Insert(input product.Core) error {
 
 func (p *productQuery) SelectProductById(id uint) (*product.Core, error) {
 	var productGorm Product
-	tx := p.db.First(&productGorm, id)
+	tx := p.db.Preload("User").First(&productGorm, id)
 	if tx.Error != nil {
 		return nil, tx.Error
-	}
-
-	result, err := p.userData.SelectProfileById(productGorm.UserID)
-	if err != nil {
-		return nil, err
 	}
 
 	return &product.Core{
 		ID:            productGorm.ID,
 		UserID:        productGorm.UserID,
-		MerchantName:  result.Name,
+		MerchantName:  productGorm.User.Name,
 		ProductName:   productGorm.ProductName,
 		Description:   productGorm.Description,
 		Price:         productGorm.Price,
