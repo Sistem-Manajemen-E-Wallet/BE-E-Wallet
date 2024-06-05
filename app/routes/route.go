@@ -37,7 +37,7 @@ func InitRouter(e *echo.Echo, db *gorm.DB) {
 	userService := userService.New(userDataService, hashService)
 	userHandler := userHandler.New(userService)
 
-	dataProduct := productData.New(db, userDataService)
+	dataProduct := productData.New(db)
 	productService := productService.New(dataProduct, userDataService)
 	productHandler := productHandler.New(productService)
 
