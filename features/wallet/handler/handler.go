@@ -21,7 +21,7 @@ func New(ws wallet.ServiceInterface) *WalletHandler {
 
 func (wh *WalletHandler) GetWalletById(c echo.Context) error {
 	idToken := middlewares.ExtractTokenUserId(c)
-	result, err := wh.walletService.GetWalletById(uint(idToken))
+	result, err := wh.walletService.GetWalletByUserId(uint(idToken))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, responses.WebJSONResponse("error read data: "+err.Error(), nil))
 	}

@@ -16,9 +16,9 @@ func New(wd wallet.DataInterface) wallet.ServiceInterface {
 }
 
 // GetWalletById implements wallet.ServiceInterface.
-func (w *walletService) GetWalletById(id uint) (wallet.Core, error) {
+func (w *walletService) GetWalletByUserId(id uint) (wallet.Core, error) {
 	if id == 0 {
 		return wallet.Core{}, errors.New("invalid user id")
 	}
-	return w.walletData.GetWalletById(id)
+	return w.walletData.GetWalletByUserId(id)
 }
