@@ -1181,6 +1181,32 @@
                         "JWTAuth":[]
                     }
                 ],
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "minimum": 1,
+                            "default": 1
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Number of items per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "minimum": 1,
+                            "default": 10
+                        }
+                    }
+                ],
                 "tags": ["histories"],
                 "summary": "get histories by token id",
                 "description": "get histories by user_id from token id",
@@ -1196,6 +1222,12 @@
                                     "success_get_history": {
                                         "value": {
                                             "message": "success get history",
+                                            "meta": {
+                                                "limit": 10,
+                                                "page": 1,
+                                                "total_items": 2,
+                                                "total_pages": 1
+                                            },
                                             "data": [
                                                 {
                                                     "id": 18,
