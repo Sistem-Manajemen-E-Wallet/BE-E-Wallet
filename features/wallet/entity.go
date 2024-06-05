@@ -20,5 +20,5 @@ type DataInterface interface {
 }
 
 type ServiceInterface interface {
-	GetWalletById(id uint) (Core, error)
+	GetWalletByUserId(id uint) (Core, error)
 }
