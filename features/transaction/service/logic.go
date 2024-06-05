@@ -50,8 +50,16 @@ func (t *TransactionService) Create(input transaction.Core) error {
 }
 
 // GetTransactionById implements transaction.ServiceInterface.
-func (t *TransactionService) GetTransactionById(id uint) (*transaction.Core, error) {
-	panic("unimplemented")
+func (t *TransactionService) GetTransactionById(userId uint, id uint) (*transaction.Core, error) {
+	result, err := t.transactionData.SelectTransactionById(id)
+	if err != nil {
+		return nil, err
+	}
+	if result.UserID != userId {
+		return nil, errors.New("this is not your transaction")
+	}
+
+	return t.transactionData.SelectTransactionById(id)
 }
 
 // GetTransactionByMerchantId implements transaction.ServiceInterface.
