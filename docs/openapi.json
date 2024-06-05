@@ -1584,6 +1584,10 @@
                         "type": "integer",
                         "example": 1
                     },
+                    "merchant_name":{
+                        "type": "string",
+                        "example":"merchant name"
+                    },
                     "product_name": {
                         "type": "string",
                         "example": "Sample Product"
