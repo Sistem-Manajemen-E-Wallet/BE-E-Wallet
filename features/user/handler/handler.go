@@ -166,6 +166,9 @@ func (uh *UserHandler) Login(c echo.Context) error {
 
 	login, token, errLogin := uh.userService.Login(loginUser.PhoneNumber, loginUser.Pin)
 	if errLogin != nil {
+		if strings.Contains(errLogin.Error(), "record not found") {
+			return c.JSON(http.StatusNotFound, responses.WebJSONResponse("error login: record not found", nil))
+		}
 		if strings.Contains(errLogin.Error(), "validation") {
 			return c.JSON(http.StatusBadRequest, responses.WebJSONResponse("error login: "+errLogin.Error(), nil))
 		}

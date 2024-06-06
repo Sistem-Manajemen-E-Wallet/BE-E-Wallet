@@ -3,6 +3,8 @@ package data
 import (
 	userData "e-wallet/features/user/data"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type Product struct {
@@ -14,5 +16,6 @@ type Product struct {
 	ProductImages string
 	CreatedAt     time.Time
 	UpdatedAt     time.Time
+	DeletedAt     gorm.DeletedAt
 	User          userData.User `gorm:"foreignKey:UserID"`
 }
