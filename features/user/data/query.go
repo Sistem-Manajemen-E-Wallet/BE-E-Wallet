@@ -57,13 +57,13 @@ func (u *userQuery) SelectProfileById(id uint) (*user.Core, error) {
 		ID:             id,
 		Name:           userProfile.Name,
 		Email:          userProfile.Email,
-		Pin:            userProfile.Pin,
 		Phone:          userProfile.PhoneNumber,
+		Address:        userProfile.Address,
+		Pin:            userProfile.Pin,
 		Role:           userProfile.Role,
-		CreatedAt:      userProfile.CreatedAt,
 		ProfilePicture: userProfile.ProfilePicture,
+		CreatedAt:      userProfile.CreatedAt,
 		UpdatedAt:      userProfile.UpdatedAt,
-		DeleteAt:       userProfile.DeletedAt.Time,
 	}
 
 	return &userCore, nil
