@@ -7,8 +7,10 @@ import (
 type GetAllTransactionResponse struct {
 	ID             uint
 	UserID         uint
+	CustName       string
 	OrderID        int
 	ProductID      uint
+	ProductName    string
 	Quantity       int
 	TotalCost      int
 	StatusProgress string
@@ -20,8 +22,10 @@ func toResponse(transaction transaction.Core) GetAllTransactionResponse {
 	return GetAllTransactionResponse{
 		ID:             transaction.ID,
 		UserID:         transaction.UserID,
+		CustName:       transaction.CustName,
 		OrderID:        transaction.OrderID,
 		ProductID:      transaction.ProductID,
+		ProductName:    transaction.ProductName,
 		Quantity:       transaction.Quantity,
 		TotalCost:      transaction.TotalCost,
 		StatusProgress: transaction.StatusProgress,

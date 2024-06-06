@@ -39,17 +39,24 @@ func (t *TransactionQuery) Insert(input transaction.Core) error {
 		return err
 	}
 
+	value, err5 := t.ud.SelectProfileById(input.UserID)
+	if err5 != nil {
+		return err5
+	}
+
 	transactionGorm := Transaction{
 		Model:          gorm.Model{},
 		UserID:         input.UserID,
+		CustName:       value.Name,
 		OrderID:        input.OrderID,
 		ProductID:      input.ProductID,
+		ProductName:    result.ProductName,
+		MerchantID:     result.UserID,
 		Quantity:       input.Quantity,
 		TotalCost:      result.Price * input.Quantity,
 		StatusProgress: "sedang dimasak",
 		Additional:     input.Additional,
 		StatusPayment:  "success",
-		MerchantID:     result.UserID,
 	}
 
 	err3 := t.wd.UpdateBalanceMinus(input.UserID, transactionGorm.TotalCost)
@@ -123,8 +130,10 @@ func (t *TransactionQuery) SelectTransactionByMerchantId(id uint, offset int, li
 		transactionCore = append(transactionCore, transaction.Core{
 			ID:             v.ID,
 			UserID:         v.UserID,
+			CustName:       v.CustName,
 			OrderID:        v.OrderID,
 			ProductID:      v.ProductID,
+			ProductName:    v.ProductName,
 			Quantity:       v.Quantity,
 			TotalCost:      v.TotalCost,
 			StatusProgress: v.StatusProgress,
