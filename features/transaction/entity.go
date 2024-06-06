@@ -5,9 +5,11 @@ import "time"
 type Core struct {
 	ID             uint
 	UserID         uint
+	CustName       string
 	Pin            string
 	OrderID        int
 	ProductID      uint
+	ProductName    string
 	Quantity       int
 	TotalCost      int
 	StatusProgress string
