@@ -59,14 +59,14 @@ func (t *TransactionService) GetTransactionById(userId uint, id uint) (*transact
 		return nil, errors.New("this is not your transaction")
 	}
 
-	return t.transactionData.SelectTransactionById(id)
+	return result, nil
 }
 
 // GetTransactionByMerchantId implements transaction.ServiceInterface.
 func (t *TransactionService) GetTransactionByMerchantId(id uint, offset int, limit int) ([]transaction.Core, int, error) {
 	result, err := t.transactionData.SelectTransactionByMerchantId(id, offset, limit)
 	if err != nil {
-		return nil, 0, errors.New("product not found")
+		return nil, 0, errors.New("transaction not found")
 	}
 	result2, err2 := t.transactionData.CountByMerchantId(id)
 	if err2 != nil {
