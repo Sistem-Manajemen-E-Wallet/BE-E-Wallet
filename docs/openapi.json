@@ -858,7 +858,17 @@
                             "minimum": 1,
                             "default": 10
                         }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Name of product",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
                     }
+
                 ],
                 "tags": ["products"],
                 "summary": "Get all products",
