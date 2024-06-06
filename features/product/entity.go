@@ -23,6 +23,8 @@ type DataInterface interface {
 	Delete(input uint) error
 	CountProductByUserId(id uint) (int, error)
 	CountProduct() (int, error)
+	SearchProducts(offset, limit int, search string) ([]Core, error) // Tambahkan fungsi ini
+	CountProductBySearch(search string) (int, error)
 }
 
 type ServiceInterface interface {
@@ -30,6 +32,7 @@ type ServiceInterface interface {
 	GetProductById(id uint) (*Core, error)
 	GetAllProduct(offset, limit int) ([]Core, int, error)
 	GetProductByUserId(id uint, offset, limit int) ([]Core, int, error)
+	SearchProducts(offset, limit int, search string) ([]Core, int, error)
 	Update(id uint, input Core) error
 	Delete(input uint, userID uint) error
 }

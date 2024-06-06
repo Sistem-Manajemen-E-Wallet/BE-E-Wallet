@@ -137,3 +137,36 @@ func (p *productQuery) CountProduct() (int, error) {
 	}
 	return int(count), nil
 }
+
+func (p *productQuery) SearchProducts(offset, limit int, search string) ([]product.Core, error) {
+	var productGorm []Product
+	tx := p.db.Offset(offset).Limit(limit).Where("product_name LIKE ?", "%"+search+"%").Find(&productGorm)
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+
+	var productCore []product.Core
+	for _, v := range productGorm {
+		productCore = append(productCore, product.Core{
+			ID:            v.ID,
+			UserID:        v.UserID,
+			ProductName:   v.ProductName,
+			Description:   v.Description,
+			Price:         v.Price,
+			ProductImages: v.ProductImages,
+			CreatedAt:     v.CreatedAt,
+			UpdatedAt:     v.UpdatedAt,
+		})
+	}
+
+	return productCore, nil
+}
+
+func (p *productQuery) CountProductBySearch(search string) (int, error) {
+	var count int64
+	tx := p.db.Model(&Product{}).Where("product_name LIKE ?", "%"+search+"%").Count(&count)
+	if tx.Error != nil {
+		return 0, tx.Error
+	}
+	return int(count), nil
+}
