@@ -120,6 +120,7 @@ func (uh *UserHandler) GetProfileUser(c echo.Context) error {
 		ID:             result.ID,
 		Name:           result.Name,
 		Email:          result.Email,
+		Address:        result.Address,
 		Role:           result.Role,
 		ProfilePicture: result.ProfilePicture,
 	}
