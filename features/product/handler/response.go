@@ -8,7 +8,7 @@ import (
 type GetAllProductResponse struct {
 	ID            uint      `json:"id"`
 	UserID        uint      `json:"user_id"`
-	MerchantName  string    `json:"merchant_name"`
+	MerchantName  string    `json:"merchant_name,omitempty"`
 	ProductName   string    `json:"product_name"`
 	Description   string    `json:"description"`
 	Price         int       `json:"price"`
