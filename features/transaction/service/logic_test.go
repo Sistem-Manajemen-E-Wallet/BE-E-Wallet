@@ -14,7 +14,7 @@ import (
 func TestCreate(t *testing.T) {
 	repoTransactionMock := new(mocks.TransactionData)
 	repoWalletMock := new(mocks.WalletData)
-	repoProductMock := new(mocks.ProductData)
+	repoProductMock := new(mocks.ProductDataZwei)
 	transactionService := New(repoTransactionMock, repoWalletMock, repoProductMock)
 
 	t.Run("success create transaction", func(t *testing.T) {
@@ -133,7 +133,7 @@ func TestCreate(t *testing.T) {
 func TestGetTransactionById(t *testing.T) {
 	repoTransactionMock := new(mocks.TransactionData)
 	repoWalletMock := new(mocks.WalletData)
-	repoProductMock := new(mocks.ProductData)
+	repoProductMock := new(mocks.ProductDataZwei)
 	transactionService := New(repoTransactionMock, repoWalletMock, repoProductMock)
 
 	t.Run("success get transaction", func(t *testing.T) {
@@ -187,7 +187,7 @@ func TestGetTransactionById(t *testing.T) {
 func TestGetTransactionByMerchantId(t *testing.T) {
 	repoTransactionMock := new(mocks.TransactionData)
 	repoWalletMock := new(mocks.WalletData)
-	repoProductMock := new(mocks.ProductData)
+	repoProductMock := new(mocks.ProductDataZwei)
 	transactionService := New(repoTransactionMock, repoWalletMock, repoProductMock)
 
 	t.Run("success get transactions by merchant id", func(t *testing.T) {
@@ -252,7 +252,7 @@ func TestGetTransactionByMerchantId(t *testing.T) {
 func TestUpdateStatusProgress(t *testing.T) {
 	repoTransactionMock := new(mocks.TransactionData)
 	repoWalletMock := new(mocks.WalletData)
-	repoProductMock := new(mocks.ProductData)
+	repoProductMock := new(mocks.ProductDataZwei)
 	transactionService := New(repoTransactionMock, repoWalletMock, repoProductMock)
 
 	t.Run("success update status progress", func(t *testing.T) {
@@ -319,7 +319,7 @@ func TestUpdateStatusProgress(t *testing.T) {
 func TestVerifyPin(t *testing.T) {
 	repoTransactionMock := new(mocks.TransactionData)
 	repoWalletMock := new(mocks.WalletData)
-	repoProductMock := new(mocks.ProductData)
+	repoProductMock := new(mocks.ProductDataZwei)
 	transactionService := New(repoTransactionMock, repoWalletMock, repoProductMock)
 
 	t.Run("verify successful", func(t *testing.T) {
