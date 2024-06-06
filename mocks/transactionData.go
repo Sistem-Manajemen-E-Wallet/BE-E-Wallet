@@ -137,6 +137,24 @@ func (_m *TransactionData) UpdateStatusProgress(id uint, input transaction.Core)
 	return r0
 }
 
+// VerifyPin provides a mock function with given fields: pin, idUser
+func (_m *TransactionData) VerifyPin(pin string, idUser uint) error {
+	ret := _m.Called(pin, idUser)
+
+	if len(ret) == 0 {
+		panic("no return value specified for VerifyPin")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(string, uint) error); ok {
+		r0 = rf(pin, idUser)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // NewTransactionData creates a new instance of TransactionData. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewTransactionData(t interface {
