@@ -137,3 +137,17 @@ func (p *productService) Delete(id uint, userID uint) error {
 	}
 	return nil
 }
+
+func (p *productService) SearchProducts(offset, limit int, search string) ([]product.Core, int, error) {
+	result, err := p.productData.SearchProducts(offset, limit, search)
+	if err != nil {
+		return nil, 0, errors.New("product not found")
+	}
+
+	totalProduct, err := p.productData.CountProductBySearch(search)
+	if err != nil {
+		return nil, 0, errors.New("product not found")
+	}
+
+	return result, totalProduct, nil
+}
