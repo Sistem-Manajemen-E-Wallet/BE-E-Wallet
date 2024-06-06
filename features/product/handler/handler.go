@@ -35,7 +35,17 @@ func (ph *productHandler) GetAllProduct(c echo.Context) error {
 
 	offset := (page - 1) * limit
 
-	results, totalProducts, err := ph.productService.GetAllProduct(offset, limit)
+	search := c.QueryParam("search")
+
+	var results []product.Core
+	var totalProducts int
+
+	if search != "" {
+		results, totalProducts, err = ph.productService.SearchProducts(offset, limit, search)
+	} else {
+		results, totalProducts, err = ph.productService.GetAllProduct(offset, limit)
+	}
+
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, responses.WebJSONResponse("error read data: "+err.Error(), nil))
 	}
