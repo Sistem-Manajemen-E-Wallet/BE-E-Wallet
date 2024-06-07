@@ -38,7 +38,7 @@ func (h *HistoryQuery) InsertHistory(input history.Core) error {
 // SelectAllHistory implements history.DataInterface.
 func (h *HistoryQuery) SelectAllHistory(idUser uint, offset, limit int) ([]history.Core, error) {
 	var historyGorm []History
-	tx := h.db.Model(&History{}).Where("user_id = ?", idUser).Offset(offset).Limit(limit).Find(&historyGorm)
+	tx := h.db.Model(&History{}).Where("user_id = ?", idUser).Order("created_at desc").Offset(offset).Limit(limit).Find(&historyGorm)
 	if tx.Error != nil {
 		return nil, tx.Error
 	}
