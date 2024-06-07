@@ -1,3 +1,10 @@
+test-all:
+	go test ./features/user/service -coverprofile=cover.out
+	go test ./features/history/service -coverprofile=cover.out
+	go test ./features/product/service -coverprofile=cover.out
+	go test ./features/topups/service -coverprofile=cover.out
+	go test ./features/transaction/service -coverprofile=cover.out
+	go test ./features/wallet/service -coverprofile=cover.out
 test-user:
 	go test ./features/user/service -coverprofile=cover.out
 test-history:
