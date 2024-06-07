@@ -72,8 +72,8 @@ func (uh *UserHandler) RegisterCustomer(c echo.Context) error {
 	}
 	errInsert := uh.userService.Create(inputCore)
 	if errInsert != nil {
-		if strings.Contains(errInsert.Error(), "validation") {
-			return c.JSON(http.StatusBadRequest, responses.WebJSONResponse("error insert data: "+errInsert.Error(), nil))
+		if strings.Contains(errInsert.Error(), "pin") {
+			return c.JSON(http.StatusBadRequest, responses.WebJSONResponse(errInsert.Error(), nil))
 		}
 		return c.JSON(http.StatusInternalServerError, responses.WebJSONResponse("error insert data: "+errInsert.Error(), nil))
 	}
@@ -99,8 +99,8 @@ func (uh *UserHandler) RegisterMerchant(c echo.Context) error {
 	}
 	errInsert := uh.userService.Create(inputCore)
 	if errInsert != nil {
-		if strings.Contains(errInsert.Error(), "validation") {
-			return c.JSON(http.StatusBadRequest, responses.WebJSONResponse("error insert data: "+errInsert.Error(), nil))
+		if strings.Contains(errInsert.Error(), "pin") {
+			return c.JSON(http.StatusBadRequest, responses.WebJSONResponse(errInsert.Error(), nil))
 		}
 		return c.JSON(http.StatusInternalServerError, responses.WebJSONResponse("error insert data: "+errInsert.Error(), nil))
 	}
@@ -168,12 +168,12 @@ func (uh *UserHandler) Login(c echo.Context) error {
 	login, token, errLogin := uh.userService.Login(loginUser.PhoneNumber, loginUser.Pin)
 	if errLogin != nil {
 		if strings.Contains(errLogin.Error(), "record not found") {
-			return c.JSON(http.StatusNotFound, responses.WebJSONResponse("error login: record not found", nil))
+			return c.JSON(http.StatusNotFound, responses.WebJSONResponse(errLogin.Error(), nil))
 		}
-		if strings.Contains(errLogin.Error(), "validation") {
-			return c.JSON(http.StatusBadRequest, responses.WebJSONResponse("error login: "+errLogin.Error(), nil))
+		if strings.Contains(errLogin.Error(), "wrong pin") {
+			return c.JSON(http.StatusBadRequest, responses.WebJSONResponse(errLogin.Error(), nil))
 		}
-		return c.JSON(http.StatusInternalServerError, responses.WebJSONResponse("error login: "+errLogin.Error(), nil))
+		return c.JSON(http.StatusInternalServerError, responses.WebJSONResponse(errLogin.Error(), nil))
 	}
 
 	var resultResponse = map[string]any{
