@@ -35,10 +35,10 @@ func (u *userService) UpdateProfilePicture(id uint, input user.Core) error {
 // Create implements user.ServiceInterface.
 func (u *userService) Create(input user.Core) error {
 	if input.Name == "" || input.Email == "" || input.Pin == "" || input.Phone == "" {
-		return errors.New("[validation] nama/email/pin/phone tidak boleh kosong")
+		return errors.New("name/email/pin/phone cannot be empty")
 	}
 	if input.Pin != input.PinConfirm {
-		return errors.New("[validation] pin tidak sama")
+		return errors.New("pin does not match")
 	}
 	result, errHash := u.hashService.HashPassword(input.Pin)
 	if errHash != nil {
@@ -105,7 +105,7 @@ func (u *userService) Login(phone string, Pin string) (data *user.Core, token st
 
 	isLoginValid := u.hashService.CheckPasswordHash(data.Pin, Pin)
 	if !isLoginValid {
-		return nil, "", errors.New("[validation] pin tidak sesuai")
+		return nil, "", errors.New("wrong pin")
 	}
 	token, errJWT := middlewares.CreateToken(int(data.ID))
 	if errJWT != nil {

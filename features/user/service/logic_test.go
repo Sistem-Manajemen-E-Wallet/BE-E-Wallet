@@ -75,7 +75,7 @@ func TestCreate(t *testing.T) {
 		err := srv.Create(invalidInput)
 
 		assert.Error(t, err)
-		assert.EqualError(t, err, "[validation] nama/email/pin/phone tidak boleh kosong")
+		assert.EqualError(t, err, "name/email/pin/phone cannot be empty")
 	})
 
 	t.Run("failed create user due to pin mismatch", func(t *testing.T) {
@@ -91,7 +91,7 @@ func TestCreate(t *testing.T) {
 		err := srv.Create(input)
 
 		assert.Error(t, err)
-		assert.EqualError(t, err, "[validation] pin tidak sama")
+		assert.EqualError(t, err, "pin does not match")
 	})
 
 	t.Run("failed create user due to hash error", func(t *testing.T) {
@@ -331,7 +331,7 @@ func TestLogin(t *testing.T) {
 		data, _, err := srv.Login(phone, pin)
 
 		assert.Error(t, err)
-		assert.EqualError(t, err, "[validation] pin tidak sesuai")
+		assert.EqualError(t, err, "wrong pin")
 		assert.Nil(t, data)
 		repoUserMock.AssertExpectations(t)
 		hashMock.AssertExpectations(t)
