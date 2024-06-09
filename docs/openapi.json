@@ -344,57 +344,6 @@
                         "$ref": "#/components/responses/500"
                     }
                 }
-            },
-            "delete":{
-                "security": [
-                    {
-                        "JWTAuth":[]
-                    }
-                ],
-                "tags": [
-                    "users"
-                ],
-                "summary": "delete existing user",
-                "description": "delete existing user by id",
-                "responses": {
-                    "200":{
-                        "description": "successful delete user",
-                        "content":{
-                            "application/json":{
-                                "schema":{
-                                    "$ref": "#/components/responses/200"
-                                },
-                                "examples":{
-                                    "successful_delete":{
-                                        "value":{
-                                            "message":"success delete user"
-                                        }
-                                    }
-                               }
-                           }
-                        }
-                    },
-                    "404":{
-                        "description": "user not found",
-                        "content": {
-                            "application/json":{
-                                "schema":{
-                                    "$ref": "#/components/responses/404"
-                                },
-                                "examples":{
-                                    "failed_delete":{
-                                        "value":{
-                                            "message":"failed delete. user not found"
-                                        }
-                                    }
-                               }
-                            }
-                        }
-                    },
-                    "500":{
-                        "$ref": "#/components/responses/500"
-                    }
-                }
             }
         },
         "/users/changeprofilepicture":{
