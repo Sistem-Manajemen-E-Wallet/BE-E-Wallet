@@ -8,8 +8,9 @@ import (
 	"e-wallet/utils/midtranspay"
 	"e-wallet/utils/randomstring"
 	"errors"
-	"github.com/go-playground/validator/v10"
 	"strings"
+
+	"github.com/go-playground/validator/v10"
 )
 
 type topupsService struct {
@@ -72,7 +73,7 @@ func (t *topupsService) Create(input topups.Core) (topups.Core, error) {
 		Amount:      input.Amount,
 		Type:        "Bank Transfer",
 		ChannelBank: input.ChannelBank,
-		Status:      "pending",
+		Status:      "Pending",
 		VaNumbers:   vaNumbers,
 	}
 
@@ -87,7 +88,7 @@ func (t *topupsService) Create(input topups.Core) (topups.Core, error) {
 		Amount:  int(input.Amount),
 		TopUpID: uint(result.ID),
 		Type:    "Top-Up",
-		Status:  "pending",
+		Status:  "Pending",
 	}
 
 	err = t.historyData.InsertHistory(history)
@@ -117,7 +118,7 @@ func (t *topupsService) Update(input topups.Core) error {
 		return errors.New("topup not found")
 	}
 
-	if topup.Status == "paid" {
+	if topup.Status == "Success" {
 		return errors.New("topup status cannot be updated")
 	}
 
@@ -125,7 +126,7 @@ func (t *topupsService) Update(input topups.Core) error {
 		return errors.New("invalid topup status")
 	}
 
-	topup.Status = "paid"
+	topup.Status = "Success"
 	tx := t.topupData.Update(int(topup.ID), topup)
 	if tx != nil {
 		return errors.New("error updating topup")
@@ -144,7 +145,7 @@ func (t *topupsService) Update(input topups.Core) error {
 
 	history := history.Core{
 		TopUpID: uint(topup.ID),
-		Status:  "paid",
+		Status:  "Success",
 	}
 
 	tx = t.historyData.UpdateHistoryTopUp(history)
