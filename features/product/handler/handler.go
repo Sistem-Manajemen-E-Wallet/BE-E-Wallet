@@ -53,7 +53,7 @@ func (ph *productHandler) GetAllProduct(c echo.Context) error {
 	data := toCoreList(results)
 
 	if len(results) == 0 {
-		return c.JSON(http.StatusOK, responses.WebJSONResponse("success get all products", "there are no products"))
+		return c.JSON(http.StatusOK, responses.WebJSONResponse("there are no products", data))
 	}
 
 	response := map[string]interface{}{
