@@ -6,10 +6,11 @@ import (
 	"e-wallet/features/wallet"
 	"e-wallet/mocks"
 	"errors"
+	"testing"
+
 	"github.com/go-playground/validator/v10"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	"testing"
 )
 
 func TestCreate(t *testing.T) {
@@ -350,7 +351,7 @@ func TestUpdate(t *testing.T) {
 		topup := topups.Core{
 			ID:      1,
 			OrderID: "order123",
-			Status:  "pending",
+			Status:  "Pending",
 			UserID:  1,
 			Amount:  10000,
 		}
@@ -396,7 +397,7 @@ func TestUpdate(t *testing.T) {
 		topup := topups.Core{
 			ID:      1,
 			OrderID: "order123",
-			Status:  "paid",
+			Status:  "Success",
 		}
 
 		topupDataMock.On("SelectByOrderID", "order123").Return(topup, nil).Once()
@@ -411,12 +412,12 @@ func TestUpdate(t *testing.T) {
 	t.Run("invalid topup status", func(t *testing.T) {
 		input := topups.Core{
 			OrderID: "order123",
-			Status:  "pending",
+			Status:  "Pending",
 		}
 		topup := topups.Core{
 			ID:      1,
 			OrderID: "order123",
-			Status:  "pending",
+			Status:  "Pending",
 		}
 
 		topupDataMock.On("SelectByOrderID", "order123").Return(topup, nil).Once()
@@ -436,7 +437,7 @@ func TestUpdate(t *testing.T) {
 		topup := topups.Core{
 			ID:      1,
 			OrderID: "order123",
-			Status:  "pending",
+			Status:  "Pending",
 		}
 
 		topupDataMock.On("SelectByOrderID", "order123").Return(topup, nil).Once()
@@ -457,7 +458,7 @@ func TestUpdate(t *testing.T) {
 		topup := topups.Core{
 			ID:      1,
 			OrderID: "order123",
-			Status:  "pending",
+			Status:  "Pending",
 			UserID:  1,
 			Amount:  10000,
 		}
@@ -482,7 +483,7 @@ func TestUpdate(t *testing.T) {
 		topup := topups.Core{
 			ID:      1,
 			OrderID: "order123",
-			Status:  "pending",
+			Status:  "Pending",
 			UserID:  1,
 			Amount:  10000,
 		}
@@ -512,7 +513,7 @@ func TestUpdate(t *testing.T) {
 		topup := topups.Core{
 			ID:      1,
 			OrderID: "order123",
-			Status:  "pending",
+			Status:  "Pending",
 			UserID:  1,
 			Amount:  10000,
 		}
