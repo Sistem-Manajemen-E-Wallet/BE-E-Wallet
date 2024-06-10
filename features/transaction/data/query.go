@@ -56,7 +56,7 @@ func (t *TransactionQuery) Insert(input transaction.Core) error {
 		TotalCost:      result.Price * input.Quantity,
 		StatusProgress: "sedang dimasak",
 		Additional:     input.Additional,
-		StatusPayment:  "success",
+		StatusPayment:  "Paid",
 	}
 
 	err3 := t.wd.UpdateBalanceMinus(input.UserID, transactionGorm.TotalCost)
